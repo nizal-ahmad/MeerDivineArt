@@ -58,6 +58,7 @@ const productsSeedData = [
     dimensions: '12" x 12" each panel (pair)',
     sizes: ['12" x 12"', '16" x 16"', '20" x 20"'],
     colors: ["Deep Brown", "Antique Gold", "Matte Black"],
+    images: [{ url: "https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=800&q=80" }],
     isBestseller: true,
     featured: true,
     active: true,
@@ -76,6 +77,7 @@ const productsSeedData = [
     dimensions: '24" x 24" overall',
     sizes: ['20" x 20"', '24" x 24"', '30" x 30"'],
     colors: ["Deep Brown", "Antique Gold", "Ivory"],
+    images: [{ url: "https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=800&q=80" }],
     isBestseller: true,
     featured: true,
     active: true,
@@ -95,6 +97,7 @@ const productsSeedData = [
     dimensions: '16" x 12"',
     sizes: ['12" x 9"', '16" x 12"', '20" x 16"'],
     colors: ["Deep Brown", "Antique Gold", "Ivory"],
+    images: [{ url: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80" }],
     isBestseller: true,
     featured: true,
     active: true,
@@ -114,6 +117,7 @@ const productsSeedData = [
     dimensions: '36" x 18"',
     sizes: ['30" x 15"', '36" x 18"', '48" x 24"'],
     colors: ["Deep Brown", "Antique Gold", "Matte Black"],
+    images: [{ url: "https://images.unsplash.com/photo-1578926375605-eaf7559b1458?auto=format&fit=crop&w=800&q=80" }],
     isBestseller: true,
     featured: true,
     active: true,
@@ -132,6 +136,7 @@ const productsSeedData = [
     dimensions: '14" x 10"',
     sizes: ['10" x 8"', '14" x 10"', '18" x 12"'],
     colors: ["Deep Brown", "Antique Gold", "Ivory"],
+    images: [{ url: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=800&q=80" }],
     isNew: true,
     featured: true,
     active: true,
@@ -151,6 +156,7 @@ const productsSeedData = [
     dimensions: '18" x 8"',
     sizes: ['14" x 6"', '18" x 8"', '24" x 10"'],
     colors: ["Deep Brown", "Ivory", "Matte Black"],
+    images: [{ url: "https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=800&q=80" }],
     featured: false,
     active: true,
     ...base,
@@ -168,6 +174,7 @@ const productsSeedData = [
     dimensions: 'Three panels, 10" x 10" each',
     sizes: ['8" x 8"', '10" x 10"', '14" x 14"'],
     colors: ["Deep Brown", "Antique Gold", "Ivory"],
+    images: [{ url: "https://images.unsplash.com/photo-1609599006353-e629aaabfeae?auto=format&fit=crop&w=800&q=80" }],
     isBestseller: true,
     featured: true,
     active: true,
@@ -186,6 +193,7 @@ const productsSeedData = [
     dimensions: '20" x 14"',
     sizes: ['16" x 12"', '20" x 14"', '24" x 18"'],
     colors: ["Deep Brown", "Antique Gold", "Matte Black"],
+    images: [{ url: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=800&q=80" }],
     isBestseller: true,
     featured: true,
     active: true,
@@ -203,6 +211,7 @@ const productsSeedData = [
     dimensions: '16" x 12"',
     sizes: ['12" x 9"', '16" x 12"', '20" x 16"'],
     colors: ["Deep Brown", "Natural Oak", "Matte Black"],
+    images: [{ url: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80" }],
     isNew: true,
     featured: false,
     active: true,
@@ -222,6 +231,7 @@ const productsSeedData = [
     dimensions: '18" x 12"',
     sizes: ['14" x 10"', '18" x 12"', '22" x 16"'],
     colors: ["Antique Gold", "Deep Brown", "Ivory"],
+    images: [{ url: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=800&q=80" }],
     featured: false,
     active: true,
     ...base,
@@ -239,6 +249,7 @@ const productsSeedData = [
     dimensions: '30" x 20"',
     sizes: ['24" x 16"', '30" x 20"', '40" x 26"'],
     colors: ["Antique Gold", "Deep Brown"],
+    images: [{ url: "https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=800&q=80" }],
     featured: false,
     active: true,
     ...base,
@@ -256,6 +267,7 @@ const productsSeedData = [
     dimensions: "Sized to your wall",
     sizes: ["Small", "Medium", "Large", "Custom"],
     colors: ["Deep Brown", "Antique Gold", "Ivory", "Matte Black"],
+    images: [{ url: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80" }],
     isNew: true,
     featured: false,
     active: true,
@@ -293,16 +305,23 @@ const seedCatalog = async () => {
       if (!catDoc) continue;
 
       let prodDoc = await Product.findOne({ slug: prodData.slug });
+      const { categorySlug, ...cleanProdData } = prodData;
+
       if (!prodDoc) {
         await Product.create({
-          ...prodData,
+          ...cleanProdData,
           category: catDoc._id,
           categoryName: catDoc.name,
-          images: [], // Can be populated via admin UI or Cloudinary uploads
         });
         console.log(`Created Product: ${prodData.name}`);
       } else {
-        console.log(`Product exists: ${prodDoc.name}`);
+        prodDoc.category = catDoc._id;
+        prodDoc.categoryName = catDoc.name;
+        if (!prodDoc.images || prodDoc.images.length === 0) {
+          prodDoc.images = prodData.images;
+        }
+        await prodDoc.save();
+        console.log(`Updated Product: ${prodDoc.name}`);
       }
     }
 

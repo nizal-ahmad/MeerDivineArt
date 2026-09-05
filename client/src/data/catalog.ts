@@ -12,6 +12,11 @@ export interface Category {
   description: string;
 }
 
+export interface ProductImage {
+  url: string;
+  public_id?: string;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -28,6 +33,7 @@ export interface Product {
   care: string;
   sizes: string[];
   frameColors: string[];
+  images?: ProductImage[] | string[];
   isBestseller?: boolean;
   isNew?: boolean;
 }
@@ -77,12 +83,12 @@ export const categories: Category[] = [
 ];
 
 export const homeCategoryCards = [
-  { slug: "islamic-calligraphy", label: "Islamic Calligraphy" },
-  { slug: "custom-frames", label: "Custom Name Frames" },
-  { slug: "custom-frames", label: "Handmade Frames" },
-  { slug: "wall-art", label: "Wall Art" },
-  { slug: "personalized-art", label: "Custom Artwork" },
-  { slug: "gift-collection", label: "Gift Collection" },
+  { slug: "islamic-calligraphy", label: "Islamic Calligraphy", image: "https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=800&q=80" },
+  { slug: "custom-frames", label: "Custom Name Frames", image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80" },
+  { slug: "custom-frames", label: "Handmade Frames", image: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80" },
+  { slug: "wall-art", label: "Wall Art", image: "https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=800&q=80" },
+  { slug: "personalized-art", label: "Custom Artwork", image: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=800&q=80" },
+  { slug: "gift-collection", label: "Gift Collection", image: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=800&q=80" },
 ] as const;
 
 const base = {
@@ -107,6 +113,7 @@ export const products: Product[] = [
     dimensions: '12" x 12" each panel (pair)',
     sizes: ['12" x 12"', '16" x 16"', '20" x 20"'],
     frameColors: ["Deep Brown", "Antique Gold", "Matte Black"],
+    images: [{ url: "https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=800&q=80" }],
     isBestseller: true,
     ...base,
   },
@@ -124,6 +131,7 @@ export const products: Product[] = [
     dimensions: '24" x 24" overall',
     sizes: ['20" x 20"', '24" x 24"', '30" x 30"'],
     frameColors: ["Deep Brown", "Antique Gold", "Ivory"],
+    images: [{ url: "https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=800&q=80" }],
     isBestseller: true,
     ...base,
   },
@@ -142,6 +150,7 @@ export const products: Product[] = [
     dimensions: '16" x 12"',
     sizes: ['12" x 9"', '16" x 12"', '20" x 16"'],
     frameColors: ["Deep Brown", "Antique Gold", "Ivory"],
+    images: [{ url: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80" }],
     isBestseller: true,
     ...base,
   },
@@ -160,6 +169,7 @@ export const products: Product[] = [
     dimensions: '36" x 18"',
     sizes: ['30" x 15"', '36" x 18"', '48" x 24"'],
     frameColors: ["Deep Brown", "Antique Gold", "Matte Black"],
+    images: [{ url: "https://images.unsplash.com/photo-1578926375605-eaf7559b1458?auto=format&fit=crop&w=800&q=80" }],
     isBestseller: true,
     ...base,
   },
@@ -177,6 +187,7 @@ export const products: Product[] = [
     dimensions: '14" x 10"',
     sizes: ['10" x 8"', '14" x 10"', '18" x 12"'],
     frameColors: ["Deep Brown", "Antique Gold", "Ivory"],
+    images: [{ url: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=800&q=80" }],
     isNew: true,
     ...base,
   },
@@ -195,6 +206,7 @@ export const products: Product[] = [
     dimensions: '18" x 8"',
     sizes: ['14" x 6"', '18" x 8"', '24" x 10"'],
     frameColors: ["Deep Brown", "Ivory", "Matte Black"],
+    images: [{ url: "https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=800&q=80" }],
     ...base,
   },
   {
@@ -211,6 +223,7 @@ export const products: Product[] = [
     dimensions: 'Three panels, 10" x 10" each',
     sizes: ['8" x 8"', '10" x 10"', '14" x 14"'],
     frameColors: ["Deep Brown", "Antique Gold", "Ivory"],
+    images: [{ url: "https://images.unsplash.com/photo-1609599006353-e629aaabfeae?auto=format&fit=crop&w=800&q=80" }],
     isBestseller: true,
     ...base,
   },
@@ -228,6 +241,7 @@ export const products: Product[] = [
     dimensions: '20" x 14"',
     sizes: ['16" x 12"', '20" x 14"', '24" x 18"'],
     frameColors: ["Deep Brown", "Antique Gold", "Matte Black"],
+    images: [{ url: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=800&q=80" }],
     isBestseller: true,
     ...base,
   },
@@ -244,6 +258,7 @@ export const products: Product[] = [
     dimensions: '16" x 12"',
     sizes: ['12" x 9"', '16" x 12"', '20" x 16"'],
     frameColors: ["Deep Brown", "Natural Oak", "Matte Black"],
+    images: [{ url: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80" }],
     isNew: true,
     ...base,
   },
@@ -262,6 +277,7 @@ export const products: Product[] = [
     dimensions: '18" x 12"',
     sizes: ['14" x 10"', '18" x 12"', '22" x 16"'],
     frameColors: ["Antique Gold", "Deep Brown", "Ivory"],
+    images: [{ url: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=800&q=80" }],
     ...base,
   },
   {
@@ -278,6 +294,7 @@ export const products: Product[] = [
     dimensions: '30" x 20"',
     sizes: ['24" x 16"', '30" x 20"', '40" x 26"'],
     frameColors: ["Antique Gold", "Deep Brown"],
+    images: [{ url: "https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=800&q=80" }],
     ...base,
   },
   {
@@ -294,6 +311,7 @@ export const products: Product[] = [
     dimensions: "Sized to your wall",
     sizes: ["Small", "Medium", "Large", "Custom"],
     frameColors: ["Deep Brown", "Antique Gold", "Ivory", "Matte Black"],
+    images: [{ url: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80" }],
     isNew: true,
     ...base,
   },

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Heart, ShoppingBag } from "lucide-react";
 import { ImagePlaceholder } from "@/components/ImagePlaceholder";
@@ -41,19 +42,40 @@ export function WishlistButton({
   );
 }
 
-export function ProductCard({ product }: { product: Product & { images?: any[] } }) {
+function resolveProductImage(product: any): string {
+  if (!product) return "";
+  
+  // Check images array
+  if (Array.isArray(product.images) && product.images.length > 0) {
+    const first = product.images[0];
+    if (typeof first === "string" && first.trim()) return first.trim();
+    if (first && typeof first.url === "string" && first.url.trim()) return first.url.trim();
+    if (first && typeof first.src === "string" && first.src.trim()) return first.src.trim();
+  }
+
+  // Check single image property
+  if (typeof product.image === "string" && product.image.trim()) {
+    return product.image.trim();
+  }
+
+  return "";
+}
+
+export function ProductCard({ product }: { product: Product & { images?: any[]; image?: string } }) {
   const { addToCart } = useShop();
-  const primaryImage = product.images && product.images.length > 0 ? product.images[0].url || product.images[0] : "";
+  const [imgError, setImgError] = useState(false);
+  const primaryImage = resolveProductImage(product);
 
   return (
     <article className="group flex h-full flex-col bg-card transition-shadow duration-500 hover:shadow-[var(--shadow-soft)]">
       <div className="relative">
         <Link to="/shop" className="block overflow-hidden">
-          {primaryImage && typeof primaryImage === "string" && primaryImage.startsWith("http") ? (
+          {primaryImage && !imgError ? (
             <div className="aspect-[4/5] w-full overflow-hidden border-b border-gold/15 bg-beige/40">
               <img
                 src={primaryImage}
                 alt={product.name}
+                onError={() => setImgError(true)}
                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
             </div>

@@ -46,7 +46,11 @@ export function HeroSection() {
         <div className="relative fade-up">
           <div className="absolute -left-4 -top-4 hidden h-24 w-24 border-l border-t border-gold sm:block" />
           <div className="absolute -bottom-4 -right-4 hidden h-24 w-24 border-b border-r border-gold sm:block" />
-          <ImagePlaceholder type="hero" label="Hero Artwork" />
+          <ImagePlaceholder
+            type="hero"
+            label="Hero Artwork"
+            src="https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=1000&q=85"
+          />
         </div>
       </div>
     </section>
@@ -71,7 +75,8 @@ export function CategorySection() {
           >
             <ImagePlaceholder
               type="category"
-              label="Collection Image"
+              label={card.label}
+              src={card.image}
               ratio={
                 i % 3 === 1 ? "aspect-[4/5]" : i % 3 === 2 ? "aspect-square" : undefined
               }
@@ -121,7 +126,11 @@ export function CustomArtSection() {
   return (
     <section className="mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-24">
       <div className="grid items-center gap-10 md:grid-cols-2 md:gap-16">
-        <ImagePlaceholder type="story" label="Custom Artwork Image" />
+        <ImagePlaceholder
+          type="story"
+          label="Custom Artwork Image"
+          src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=900&q=80"
+        />
         <div>
           <p className="eyebrow">Custom Art</p>
           <h2 className="mt-4 text-3xl text-brown sm:text-4xl md:text-5xl">
@@ -216,7 +225,11 @@ export function BrandStorySection() {
   return (
     <section className="border-y border-gold/20 bg-card/60">
       <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 py-16 sm:px-8 md:grid-cols-2 md:gap-16 md:py-24">
-        <ImagePlaceholder type="story" label="Studio Image" />
+        <ImagePlaceholder
+          type="story"
+          label="Studio Image"
+          src="https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=900&q=80"
+        />
         <div>
           <p className="eyebrow">Our Story</p>
           <h2 className="mt-4 text-3xl text-brown sm:text-4xl md:text-5xl">
@@ -242,13 +255,13 @@ export function BrandStorySection() {
   );
 }
 
-const galleryLabels = [
-  "Craft Process",
-  "Calligraphy",
-  "Handmade Frame",
-  "Finished Artwork",
-  "Packaging",
-  "Custom Design",
+const galleryItems = [
+  { label: "Craft Process", image: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80" },
+  { label: "Calligraphy", image: "https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=800&q=80" },
+  { label: "Handmade Frame", image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80" },
+  { label: "Finished Artwork", image: "https://images.unsplash.com/photo-1578926375605-eaf7559b1458?auto=format&fit=crop&w=800&q=80" },
+  { label: "Packaging", image: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=800&q=80" },
+  { label: "Custom Design", image: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=800&q=80" },
 ];
 
 export function GallerySection() {
@@ -268,9 +281,14 @@ export function GallerySection() {
         subtitle="Behind every piece is a story, the process and a little bit of creativity."
       />
       <div className="mt-12 columns-2 gap-4 sm:gap-6 lg:columns-3">
-        {galleryLabels.map((label, i) => (
-          <div key={label} className="mb-4 break-inside-avoid sm:mb-6">
-            <ImagePlaceholder type="gallery" label={label} ratio={ratios[i]} />
+        {galleryItems.map((item, i) => (
+          <div key={item.label} className="mb-4 break-inside-avoid sm:mb-6">
+            <ImagePlaceholder
+              type="gallery"
+              label={item.label}
+              src={item.image}
+              ratio={ratios[i]}
+            />
           </div>
         ))}
       </div>

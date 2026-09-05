@@ -144,49 +144,76 @@ function CartCheckoutPage() {
               </h2>
 
               <ul className="mt-6 space-y-6">
-                {cart.map((item) => (
-                  <li key={item.productId} className="flex gap-4 border-b border-gold/15 pb-6">
-                    <div className="w-20 shrink-0 border border-gold/30 bg-beige/40 h-24 flex items-center justify-center text-xs text-brown/50 uppercase">
-                      Frame
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-medium text-brown text-base">{item.productId}</h3>
-                      {item.size ? (
-                        <p className="mt-1 text-xs text-brown/60">
-                          Size: {item.size} {item.frameColor ? `• Frame: ${item.frameColor}` : ""}
-                        </p>
-                      ) : null}
+                {cart.map((item) => {
+                  const prod = getProduct(item.productId);
+                  const title = prod ? prod.name : item.productId;
+                  const itemPrice = prod ? prod.price : 0;
+                  const imgUrl = prod && prod.images && prod.images.length > 0
+                    ? (typeof prod.images[0] === "string" ? prod.images[0] : prod.images[0].url)
+                    : "";
 
-                      <div className="mt-3 flex items-center justify-between">
-                        <div className="flex items-center border border-gold/40">
-                          <button
-                            type="button"
-                            onClick={() => setQuantity(item.productId, item.quantity - 1)}
-                            className="px-2.5 py-1 text-brown hover:bg-sand/50"
-                          >
-                            -
-                          </button>
-                          <span className="w-8 text-center text-xs font-semibold">{item.quantity}</span>
-                          <button
-                            type="button"
-                            onClick={() => setQuantity(item.productId, item.quantity + 1)}
-                            className="px-2.5 py-1 text-brown hover:bg-sand/50"
-                          >
-                            +
-                          </button>
+                  return (
+                    <li key={item.productId} className="flex gap-4 border-b border-gold/15 pb-6">
+                      <div className="w-20 shrink-0 border border-gold/30 bg-beige/40 h-24 overflow-hidden flex items-center justify-center">
+                        {imgUrl ? (
+                          <img
+                            src={imgUrl}
+                            alt={title}
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <span className="text-[0.6rem] uppercase tracking-wider text-brown/50 text-center px-1">
+                            Art Piece
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex justify-between items-start">
+                          <h3 className="font-medium text-brown text-base">{title}</h3>
+                          {itemPrice ? (
+                            <span className="text-sm font-semibold text-brown">
+                              {formatPrice(itemPrice * item.quantity)}
+                            </span>
+                          ) : null}
                         </div>
 
-                        <button
-                          type="button"
-                          onClick={() => removeFromCart(item.productId)}
-                          className="text-brown/50 hover:text-burnt"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
+                        {item.size ? (
+                          <p className="mt-1 text-xs text-brown/60">
+                            Size: {item.size} {item.frameColor ? `• Frame: ${item.frameColor}` : ""}
+                          </p>
+                        ) : null}
+
+                        <div className="mt-3 flex items-center justify-between">
+                          <div className="flex items-center border border-gold/40">
+                            <button
+                              type="button"
+                              onClick={() => setQuantity(item.productId, item.quantity - 1)}
+                              className="px-2.5 py-1 text-brown hover:bg-sand/50"
+                            >
+                              -
+                            </button>
+                            <span className="w-8 text-center text-xs font-semibold">{item.quantity}</span>
+                            <button
+                              type="button"
+                              onClick={() => setQuantity(item.productId, item.quantity + 1)}
+                              className="px-2.5 py-1 text-brown hover:bg-sand/50"
+                            >
+                              +
+                            </button>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => removeFromCart(item.productId)}
+                            className="text-brown/50 hover:text-burnt transition-colors"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  </li>
-                ))}
+                    </li>
+                  );
+                })}
               </ul>
 
               <div className="mt-6 flex justify-between items-center text-sm font-semibold text-brown">

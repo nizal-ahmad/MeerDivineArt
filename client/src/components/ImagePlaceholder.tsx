@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Image as ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -18,25 +19,46 @@ const ratioClass: Record<PlaceholderType, string> = {
   story: "aspect-[5/6]",
 };
 
-/**
- * Temporary premium image placeholder.
- * Replace with <img src={...} alt={...} className="h-full w-full object-cover" />
- * inside the same wrapper when real photography is available.
- */
 export function ImagePlaceholder({
   type = "product",
   label = "Product Image",
+  src,
   className,
   ratio,
   zoomOnHover = true,
 }: {
   type?: PlaceholderType;
   label?: string;
+  src?: string;
   className?: string;
   ratio?: string;
   zoomOnHover?: boolean;
 }) {
+  const [imgError, setImgError] = useState(false);
   const isLarge = type === "hero" || type === "story";
+
+  if (src && !imgError) {
+    return (
+      <div
+        className={cn(
+          "group/ph relative w-full overflow-hidden border border-gold/30 bg-ivory",
+          ratio ?? ratioClass[type],
+          className,
+        )}
+      >
+        <img
+          src={src}
+          alt={label || "Artwork"}
+          onError={() => setImgError(true)}
+          className={cn(
+            "h-full w-full object-cover transition-transform duration-700",
+            zoomOnHover && "group-hover/ph:scale-[1.04]"
+          )}
+        />
+        <div className="pointer-events-none absolute inset-3 border border-gold/25" />
+      </div>
+    );
+  }
 
   return (
     <div
@@ -110,14 +132,18 @@ export function ImagePlaceholder({
 
 export const HeroImagePlaceholder = ({
   label = "Hero Artwork",
+  src,
 }: {
   label?: string;
-}) => <ImagePlaceholder type="hero" label={label} />;
+  src?: string;
+}) => <ImagePlaceholder type="hero" label={label} src={src} />;
 
 export const ProductImagePlaceholder = ({
   label = "Product Image",
+  src,
   className,
 }: {
   label?: string;
+  src?: string;
   className?: string;
-}) => <ImagePlaceholder type="product" label={label} className={className} />;
+}) => <ImagePlaceholder type="product" label={label} src={src} className={className} />;
