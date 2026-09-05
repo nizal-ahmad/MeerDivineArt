@@ -1,7 +1,7 @@
 import { SlidersHorizontal, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { ProductGrid } from "@/components/ProductCard";
-import { categories, formatPrice, type Product } from "@/data/catalog";
+import { categories as staticCategories, formatPrice, type Product } from "@/data/catalog";
 
 const sortOptions = [
   { value: "featured", label: "Featured" },
@@ -20,15 +20,21 @@ const priceBands = [
 export function ShopBrowser({
   allProducts,
   lockedCategory,
+  dynamicCategories,
 }: {
   allProducts: Product[];
   lockedCategory?: string;
+  dynamicCategories?: any[];
 }) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string>("all");
   const [band, setBand] = useState<string>("all");
   const [sort, setSort] = useState<string>("featured");
   const [filtersOpen, setFiltersOpen] = useState(false);
+
+  const categoriesList = dynamicCategories && dynamicCategories.length > 0
+    ? dynamicCategories
+    : staticCategories;
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -76,14 +82,14 @@ export function ShopBrowser({
             Category
           </h3>
           <ul className="mt-4 space-y-2">
-            {[{ slug: "all", name: "All Collections" }, ...categories].map((c) => (
+            {[{ slug: "all", name: "All Collections" }, ...categoriesList].map((c) => (
               <li key={c.slug}>
                 <button
                   type="button"
                   onClick={() => setCategory(c.slug)}
                   className={`w-full border-l-2 py-1.5 pl-3 text-left text-sm transition-colors ${
                     category === c.slug
-                      ? "border-gold text-brown"
+                      ? "border-gold text-brown font-semibold"
                       : "border-transparent text-brown/60 hover:text-burnt"
                   }`}
                 >
@@ -107,7 +113,7 @@ export function ShopBrowser({
                 onClick={() => setBand(b.value)}
                 className={`w-full border-l-2 py-1.5 pl-3 text-left text-sm transition-colors ${
                   band === b.value
-                    ? "border-gold text-brown"
+                    ? "border-gold text-brown font-semibold"
                     : "border-transparent text-brown/60 hover:text-burnt"
                 }`}
               >
@@ -119,7 +125,7 @@ export function ShopBrowser({
       </div>
 
       <div className="border-t border-gold/25 pt-6 text-xs text-brown/55">
-        Prices from {formatPrice(Math.min(...allProducts.map((p) => p.price)))}
+        Prices from {allProducts.length ? formatPrice(Math.min(...allProducts.map((p) => p.price))) : "Rs. 0"}
       </div>
     </div>
   );

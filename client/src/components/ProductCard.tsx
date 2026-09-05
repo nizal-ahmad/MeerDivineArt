@@ -41,14 +41,25 @@ export function WishlistButton({
   );
 }
 
-export function ProductCard({ product }: { product: Product }) {
+export function ProductCard({ product }: { product: Product & { images?: any[] } }) {
   const { addToCart } = useShop();
+  const primaryImage = product.images && product.images.length > 0 ? product.images[0].url || product.images[0] : "";
 
   return (
     <article className="group flex h-full flex-col bg-card transition-shadow duration-500 hover:shadow-[var(--shadow-soft)]">
       <div className="relative">
-        <Link to="/product/$id" params={{ id: product.id }} className="block">
-          <ImagePlaceholder type="product" label="Product Image" />
+        <Link to="/shop" className="block overflow-hidden">
+          {primaryImage && typeof primaryImage === "string" && primaryImage.startsWith("http") ? (
+            <div className="aspect-[4/5] w-full overflow-hidden border-b border-gold/15 bg-beige/40">
+              <img
+                src={primaryImage}
+                alt={product.name}
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+            </div>
+          ) : (
+            <ImagePlaceholder type="product" label={product.name} />
+          )}
         </Link>
         {product.badge ? (
           <div className="absolute left-3 top-3">
@@ -66,8 +77,7 @@ export function ProductCard({ product }: { product: Product }) {
         </p>
         <h3 className="mt-2 text-lg leading-snug text-brown">
           <Link
-            to="/product/$id"
-            params={{ id: product.id }}
+            to="/shop"
             className="transition-colors hover:text-burnt"
           >
             {product.name}

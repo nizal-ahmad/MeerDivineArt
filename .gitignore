@@ -1,3 +1,32 @@
+# Environment files (Never commit secrets to git)
+.env
+.env.local
+.env.development
+.env.production
+*.env
+!.env.example
+!server/.env.example
+
+# Node dependencies
+node_modules/
+**/node_modules/
+
+# Build and output directories
+dist/
+**/dist/
+dist-ssr/
+.output/
+**/.output/
+.vinxi/
+.tanstack/
+**/.tanstack/
+.nitro/
+
+# Wrangler / Cloudflare
+.wrangler/
+**/.wrangler/
+.dev.vars
+
 # Logs
 logs
 *.log
@@ -7,20 +36,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-.output
-.vinxi
-.tanstack/**
-.nitro
-*.local
-
-# Wrangler / Cloudflare
-.wrangler/
-.dev.vars
-
-# Editor directories and files
+# Editor & OS files
 .vscode/*
 !.vscode/extensions.json
 .idea
