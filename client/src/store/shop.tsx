@@ -13,6 +13,7 @@ export interface CartItem {
   quantity: number;
   size?: string;
   frameColor?: string;
+  material?: string;
 }
 
 interface ShopState {
@@ -25,7 +26,7 @@ interface ShopState {
   menuOpen: boolean;
   addToCart: (
     productId: string,
-    options?: { quantity?: number; size?: string; frameColor?: string },
+    options?: { quantity?: number; size?: string; frameColor?: string; material?: string },
   ) => void;
   removeFromCart: (productId: string) => void;
   setQuantity: (productId: string, quantity: number) => void;
@@ -50,10 +51,16 @@ export function ShopProvider({ children }: { children: ReactNode }) {
   const addToCart: ShopState["addToCart"] = useCallback(
     (productId, options) => {
       setCart((prev) => {
-        const existing = prev.find((i) => i.productId === productId);
+        const existing = prev.find(
+          (i) =>
+            i.productId === productId &&
+            i.size === options?.size &&
+            i.frameColor === options?.frameColor &&
+            i.material === options?.material
+        );
         if (existing) {
           return prev.map((i) =>
-            i.productId === productId
+            i === existing
               ? { ...i, quantity: i.quantity + (options?.quantity ?? 1) }
               : i,
           );
@@ -65,6 +72,7 @@ export function ShopProvider({ children }: { children: ReactNode }) {
             quantity: options?.quantity ?? 1,
             size: options?.size,
             frameColor: options?.frameColor,
+            material: options?.material,
           },
         ];
       });

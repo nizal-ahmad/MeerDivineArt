@@ -111,6 +111,10 @@ export const api = {
     return request<{ success: boolean; data: any }>(`/products/${idOrSlug}`);
   },
 
+  getProductBySlug: async (slug: string) => {
+    return request<{ success: boolean; data: any }>(`/products/slug/${slug}`);
+  },
+
   createProduct: async (formData: FormData) => {
     return request<{ success: boolean; message: string; data: any }>(
       "/products",

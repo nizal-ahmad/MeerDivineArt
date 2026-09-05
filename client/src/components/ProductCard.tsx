@@ -61,15 +61,16 @@ function resolveProductImage(product: any): string {
   return "";
 }
 
-export function ProductCard({ product }: { product: Product & { images?: any[]; image?: string } }) {
+export function ProductCard({ product }: { product: Product & { slug?: string; images?: any[]; image?: string } }) {
   const { addToCart } = useShop();
   const [imgError, setImgError] = useState(false);
   const primaryImage = resolveProductImage(product);
+  const slug = product.slug || product.id;
 
   return (
     <article className="group flex h-full flex-col bg-card transition-shadow duration-500 hover:shadow-[var(--shadow-soft)]">
       <div className="relative">
-        <Link to="/shop" className="block overflow-hidden">
+        <Link to="/products/$slug" params={{ slug }} className="block overflow-hidden">
           {primaryImage && !imgError ? (
             <div className="aspect-[4/5] w-full overflow-hidden border-b border-gold/15 bg-beige/40">
               <img
@@ -99,7 +100,8 @@ export function ProductCard({ product }: { product: Product & { images?: any[]; 
         </p>
         <h3 className="mt-2 text-lg leading-snug text-brown">
           <Link
-            to="/shop"
+            to="/products/$slug"
+            params={{ slug }}
             className="transition-colors hover:text-burnt"
           >
             {product.name}
