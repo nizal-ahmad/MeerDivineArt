@@ -18,7 +18,7 @@ export const Route = createFileRoute("/about")({
   component: AboutPage,
 });
 
-export function AboutPage() {
+function AboutPage() {
   const values = [
     {
       icon: Heart,
