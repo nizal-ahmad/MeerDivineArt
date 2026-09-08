@@ -11,40 +11,88 @@ import {
   testimonials,
 } from "@/data/catalog";
 import { useShop } from "@/store/shop";
+import heroImage from "../../../assets/hero.jpeg";
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden border-b border-gold/20 bg-beige/40">
-      <div className="pointer-events-none absolute -left-24 top-10 h-72 w-72 rotate-45 border border-gold/25" />
-      <div className="pointer-events-none absolute -right-16 bottom-0 h-56 w-56 rounded-full border border-gold/20" />
+    <section className="mx-auto flex w-full max-w-7xl flex-col justify-center px-3 py-3 sm:px-6 min-h-[calc(100dvh-6.5rem)] md:h-[calc(100dvh-6.5rem)] lg:h-[calc(100dvh-6.75rem)] lg:px-8 lg:py-3.5">
+      <div className="relative flex-1 overflow-hidden rounded-2xl border border-gold/30 bg-brown shadow-[var(--shadow-lift)] lg:rounded-3xl">
+        <div className="grid h-full w-full items-center lg:grid-cols-12">
+          {/* Left Text Content Panel */}
+          <div className="relative z-10 flex h-full flex-col justify-center p-6 sm:p-8 md:p-10 lg:col-span-6 lg:p-12 xl:p-14">
+            {/* Background Pattern Watermark Motif */}
+            <div className="pointer-events-none absolute inset-0 opacity-15">
+              <svg
+                className="h-full w-full text-gold"
+                viewBox="0 0 400 400"
+                fill="none"
+                aria-hidden="true"
+                preserveAspectRatio="xMidYMid slice"
+              >
+                <path
+                  d="M200 0C250 100 350 150 400 200C350 250 250 300 200 400C150 300 50 250 0 200C50 150 150 100 200 0Z"
+                  fill="currentColor"
+                />
+                <circle cx="200" cy="200" r="120" stroke="currentColor" strokeWidth="1.5" />
+                <circle cx="200" cy="200" r="80" stroke="currentColor" strokeWidth="1.2" />
+              </svg>
+            </div>
 
-      <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-5 py-14 sm:px-8 md:grid-cols-2 md:gap-16 md:py-24">
-        <div className="fade-up">
-          <p className="eyebrow">Handcrafted Islamic Art</p>
-          <h1 className="mt-5 text-[2.6rem] leading-[1.05] text-brown sm:text-6xl lg:text-7xl">
-            Art That Holds Meaning
-          </h1>
-          <div className="rule-gold mt-6 w-28" />
-          <p className="mt-6 max-w-md text-base leading-relaxed text-brown/70">
-            Handcrafted calligraphy and timeless frames, created to bring beauty and meaning into
-            your space.
-          </p>
-          <div className="mt-9 flex flex-wrap gap-3">
-            <LinkButton to="/shop">Shop Collection</LinkButton>
-            <LinkButton to="/category/personalized-art" variant="outline">
-              Explore Custom Art
-            </LinkButton>
+            <div className="relative z-10 fade-up">
+              {/* Top Badge */}
+              <div className="inline-block rounded-sm bg-burnt px-3.5 py-1.5 text-[0.68rem] font-bold tracking-[0.2em] text-ivory uppercase shadow-sm">
+                LATEST COLLECTION
+              </div>
+
+              {/* Main Headline */}
+              <h1 className="mt-4 font-display text-3xl font-bold uppercase tracking-wider text-ivory leading-[1.08] sm:text-4xl lg:text-4xl xl:text-5xl">
+                HANDCRAFTED <br />
+                <span className="text-gold">ISLAMIC WALL ART</span>
+              </h1>
+
+              {/* Description Paragraph */}
+              <p className="mt-3.5 max-w-md text-xs leading-relaxed text-ivory/80 sm:text-sm">
+                For spaces that seek quiet beauty, faith, and personal meaning. We take sacred
+                Arabic verses and personalized names and craft them into minimalist, luxury wall
+                art. From gold-leaf detailing to solid wood frames.
+              </p>
+
+              {/* CTA Action Button */}
+              <div className="mt-6">
+                <Link
+                  to="/shop"
+                  className="inline-flex items-center justify-center rounded-full bg-burnt px-8 py-3.5 text-xs font-semibold uppercase tracking-[0.2em] text-ivory shadow-md transition-all duration-300 hover:bg-gold hover:text-brown active:scale-95"
+                >
+                  SHOP NOW
+                </Link>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div className="relative fade-up">
-          <div className="absolute -left-4 -top-4 hidden h-24 w-24 border-l border-t border-gold sm:block" />
-          <div className="absolute -bottom-4 -right-4 hidden h-24 w-24 border-b border-r border-gold sm:block" />
-          <ImagePlaceholder
-            type="hero"
-            label="Hero Artwork"
-            src="https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=1000&q=85"
-          />
+          {/* Right Image Showcase Panel with Slanted Diagonal Separator */}
+          <div className="relative min-h-[260px] h-full lg:col-span-6 lg:min-h-full">
+            {/* Slanted gold accent divider overlay on desktop */}
+            <div className="pointer-events-none absolute -left-6 inset-y-0 hidden w-12 z-20 lg:block">
+              <svg
+                className="h-full w-full text-brown"
+                preserveAspectRatio="none"
+                viewBox="0 0 100 100"
+              >
+                <polygon points="0,0 100,0 30,100 0,100" fill="currentColor" />
+                <line x1="100" y1="0" x2="30" y2="100" stroke="#C5A059" strokeWidth="3" />
+              </svg>
+            </div>
+
+            {/* Featured Room Interior Lifestyle Image */}
+            <div className="relative h-full w-full overflow-hidden">
+              <img
+                src={heroImage}
+                alt="Handcrafted Islamic Calligraphy Wall Art Interior"
+                className="h-full w-full object-cover object-center transition-transform duration-700 hover:scale-105"
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-brown/60 via-transparent to-transparent lg:hidden" />
+            </div>
+          </div>
         </div>
       </div>
     </section>

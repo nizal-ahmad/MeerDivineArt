@@ -15,6 +15,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CartDrawer } from "@/components/CartDrawer";
 import { SearchOverlay } from "@/components/SearchOverlay";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { ShopProvider } from "@/store/shop";
 
 function NotFoundComponent() {
@@ -141,6 +142,7 @@ function RootComponent() {
         </div>
         <CartDrawer />
         <SearchOverlay />
+        <WhatsAppButton />
       </ShopProvider>
     </QueryClientProvider>
   );
