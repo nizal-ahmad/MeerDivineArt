@@ -1,3 +1,6 @@
+import dns from "dns";
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
+
 import path from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
@@ -34,13 +37,17 @@ app.use(
   cors({
     origin: (origin, callback) => {
       // Allow requests with no origin (mobile apps, curl) or matched frontend
-      if (!origin || origin.startsWith("http://localhost") || origin === clientUrl) {
+      if (
+        !origin ||
+        origin.startsWith("http://localhost") ||
+        origin === clientUrl
+      ) {
         return callback(null, true);
       }
       return callback(null, true); // Dev flexible
     },
     credentials: true,
-  })
+  }),
 );
 
 // Body Parsing
@@ -51,7 +58,10 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 300, // limit each IP to 300 requests per windowMs
-  message: { success: false, message: "Too many requests from this IP, please try again later." },
+  message: {
+    success: false,
+    message: "Too many requests from this IP, please try again later.",
+  },
 });
 app.use("/api/", apiLimiter);
 
@@ -85,5 +95,7 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server running in ${process.env.NODE_ENV || "development"} mode on port ${PORT}`);
+  console.log(
+    `Server running in ${process.env.NODE_ENV || "development"} mode on port ${PORT}`,
+  );
 });
