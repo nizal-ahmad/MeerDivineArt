@@ -19,6 +19,7 @@ export interface ProductImage {
 
 export interface Product {
   id: string;
+  slug?: string;
   name: string;
   category: CategorySlug;
   categoryName: string;
@@ -36,6 +37,7 @@ export interface Product {
   images?: ProductImage[] | string[];
   isBestseller?: boolean;
   isNew?: boolean;
+  featured?: boolean;
 }
 
 export interface Testimonial {
@@ -381,7 +383,34 @@ export const navigation = [
 export const formatPrice = (value: number) =>
   `Rs. ${value.toLocaleString("en-PK")}`;
 
-export const getProduct = (id: string) => products.find((p) => p.id === id);
+export const getProduct = (id: string, catalog: Product[] = products) =>
+  catalog.find((p) => p.id === id || p.slug === id || (p as any)._id === id);
+
+export function mapApiProductToProduct(p: any): Product {
+  const images = Array.isArray(p.images) ? p.images : [];
+  return {
+    id: p.slug || p._id || p.id,
+    slug: p.slug || p._id,
+    name: p.name,
+    category: (p.category?.slug || (typeof p.category === "string" ? p.category : "") || p.categoryName?.toLowerCase().replace(/\s+/g, "-") || "islamic-calligraphy") as CategorySlug,
+    categoryName: p.categoryName || (p.category?.name ? p.category.name : "Islamic Calligraphy"),
+    price: p.price,
+    oldPrice: p.discountPrice,
+    badge: p.badge || (p.isBestseller ? "Bestseller" : p.isNew ? "New" : undefined),
+    rating: p.rating || 5,
+    reviews: p.reviews || 0,
+    description: p.description || "",
+    materials: p.materials || base.materials,
+    dimensions: p.dimensions || "",
+    care: p.care || base.care,
+    sizes: p.sizes || [],
+    frameColors: p.colors || p.frameColors || [],
+    isBestseller: Boolean(p.isBestseller),
+    isNew: Boolean(p.isNew),
+    featured: Boolean(p.featured),
+    images,
+  };
+}
 
 export const getCategory = (slug: string) =>
   categories.find((c) => c.slug === slug);

@@ -5,7 +5,7 @@ import { formatPrice } from "@/data/catalog";
 import { cartProduct, useShop } from "@/store/shop";
 
 export function CartDrawer() {
-  const { cart, cartOpen, setCartOpen, setQuantity, removeFromCart, subtotal } =
+  const { cart, cartOpen, setCartOpen, setQuantity, removeFromCart, subtotal, allProducts } =
     useShop();
 
   return (
@@ -57,16 +57,23 @@ export function CartDrawer() {
           ) : (
             <ul className="space-y-5">
               {cart.map((item) => {
-                const product = cartProduct(item);
+                const product = cartProduct(item, allProducts);
                 if (!product) return null;
+                const imgUrl = product.images && product.images.length > 0
+                  ? (typeof product.images[0] === "string" ? product.images[0] : (product.images[0] as any).url)
+                  : "";
                 return (
                   <li key={item.productId} className="flex gap-4">
-                    <div className="w-20 shrink-0">
-                      <ImagePlaceholder
-                        type="thumbnail"
-                        label=""
-                        zoomOnHover={false}
-                      />
+                    <div className="h-20 w-20 shrink-0 border border-gold/30 bg-beige/40 overflow-hidden flex items-center justify-center">
+                      {imgUrl ? (
+                        <img src={imgUrl} alt={product.name} className="h-full w-full object-cover" />
+                      ) : (
+                        <ImagePlaceholder
+                          type="thumbnail"
+                          label=""
+                          zoomOnHover={false}
+                        />
+                      )}
                     </div>
                     <div className="flex-1">
                       <p className="text-sm leading-snug text-brown">

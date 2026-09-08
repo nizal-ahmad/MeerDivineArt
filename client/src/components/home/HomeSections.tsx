@@ -1,12 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import {
-  ArrowRight,
-  Hand,
-  Heart,
-  Instagram,
-  PenTool,
-  Sparkles,
-} from "lucide-react";
+import { ArrowRight, Hand, Heart, Instagram, PenTool, Sparkles } from "lucide-react";
 import { ImagePlaceholder } from "@/components/ImagePlaceholder";
 import { ProductCard, ProductGrid } from "@/components/ProductCard";
 import { LinkButton, SectionHeading, Stars } from "@/components/ui-kit";
@@ -17,6 +10,7 @@ import {
   homeCategoryCards,
   testimonials,
 } from "@/data/catalog";
+import { useShop } from "@/store/shop";
 
 export function HeroSection() {
   return (
@@ -32,8 +26,8 @@ export function HeroSection() {
           </h1>
           <div className="rule-gold mt-6 w-28" />
           <p className="mt-6 max-w-md text-base leading-relaxed text-brown/70">
-            Handcrafted calligraphy and timeless frames, created to bring beauty
-            and meaning into your space.
+            Handcrafted calligraphy and timeless frames, created to bring beauty and meaning into
+            your space.
           </p>
           <div className="mt-9 flex flex-wrap gap-3">
             <LinkButton to="/shop">Shop Collection</LinkButton>
@@ -77,9 +71,7 @@ export function CategorySection() {
               type="category"
               label={card.label}
               src={card.image}
-              ratio={
-                i % 3 === 1 ? "aspect-[4/5]" : i % 3 === 2 ? "aspect-square" : undefined
-              }
+              ratio={i % 3 === 1 ? "aspect-[4/5]" : i % 3 === 2 ? "aspect-square" : undefined}
             />
             <div className="flex items-center justify-between px-4 py-4 sm:px-5">
               <div>
@@ -101,6 +93,11 @@ export function CategorySection() {
 }
 
 export function FeaturedSection() {
+  const { allProducts } = useShop();
+  // Dynamic list: show newly added or featured products, fallback to static featuredProducts
+  const featuredList = allProducts.filter((p) => p.featured || p.isNew || p.badge);
+  const displayItems = (featuredList.length > 0 ? featuredList : allProducts).slice(0, 8);
+
   return (
     <section className="border-y border-gold/20 bg-card/60">
       <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-24">
@@ -110,7 +107,7 @@ export function FeaturedSection() {
           subtitle="Our most loved handcrafted pieces."
         />
         <div className="mt-12">
-          <ProductGrid items={featuredProducts} />
+          <ProductGrid items={displayItems.length > 0 ? displayItems : featuredProducts} />
         </div>
         <div className="mt-12 flex justify-center">
           <LinkButton to="/shop" variant="outline">
@@ -138,8 +135,7 @@ export function CustomArtSection() {
           </h2>
           <div className="rule-gold mt-5 w-24" />
           <p className="mt-5 max-w-md leading-relaxed text-brown/70">
-            Turn your name, memories and meaningful words into a handcrafted
-            piece of art.
+            Turn your name, memories and meaningful words into a handcrafted piece of art.
           </p>
           <ul className="mt-7 space-y-3">
             {[
@@ -166,6 +162,13 @@ export function CustomArtSection() {
 }
 
 export function BestsellersSection() {
+  const { allProducts } = useShop();
+  const bestsellersList = allProducts.filter((p) => p.isBestseller);
+  const displayBestsellers = (bestsellersList.length > 0 ? bestsellersList : allProducts).slice(
+    0,
+    8,
+  );
+
   return (
     <section className="border-y border-gold/20 bg-beige/40 py-16 md:py-24">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
@@ -176,7 +179,7 @@ export function BestsellersSection() {
         />
       </div>
       <div className="no-scrollbar mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 sm:gap-6 sm:px-8 lg:mx-auto lg:max-w-7xl">
-        {bestsellers.map((p) => (
+        {(displayBestsellers.length > 0 ? displayBestsellers : bestsellers).map((p) => (
           <div
             key={p.id}
             className="w-[72%] shrink-0 snap-start sm:w-[45%] lg:w-[calc(25%-1.125rem)]"
@@ -205,14 +208,10 @@ export function BenefitsSection() {
             >
               <div className="flex items-center justify-between">
                 <Icon className="h-6 w-6 text-burnt" strokeWidth={1.2} />
-                <span className="font-display text-3xl text-gold/70">
-                  {b.number}
-                </span>
+                <span className="font-display text-3xl text-gold/70">{b.number}</span>
               </div>
               <h3 className="mt-5 text-xl text-brown">{b.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-brown/65">
-                {b.text}
-              </p>
+              <p className="mt-2 text-sm leading-relaxed text-brown/65">{b.text}</p>
             </div>
           );
         })}
@@ -237,12 +236,12 @@ export function BrandStorySection() {
           </h2>
           <div className="rule-gold mt-5 w-24" />
           <p className="mt-6 leading-relaxed text-brown/70">
-            At Meer Divine Art, we believe art should be more than something
-            beautiful on a wall. It should carry meaning, emotion and a story.
+            At Meer Divine Art, we believe art should be more than something beautiful on a wall. It
+            should carry meaning, emotion and a story.
           </p>
           <p className="mt-4 leading-relaxed text-brown/70">
-            Every piece is thoughtfully handcrafted to bring timeless beauty into
-            your home and create something you can truly connect with.
+            Every piece is thoughtfully handcrafted to bring timeless beauty into your home and
+            create something you can truly connect with.
           </p>
           <div className="mt-9">
             <LinkButton to="/about" variant="outline">
@@ -256,12 +255,36 @@ export function BrandStorySection() {
 }
 
 const galleryItems = [
-  { label: "Craft Process", image: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80" },
-  { label: "Calligraphy", image: "https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=800&q=80" },
-  { label: "Handmade Frame", image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80" },
-  { label: "Finished Artwork", image: "https://images.unsplash.com/photo-1578926375605-eaf7559b1458?auto=format&fit=crop&w=800&q=80" },
-  { label: "Packaging", image: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=800&q=80" },
-  { label: "Custom Design", image: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=800&q=80" },
+  {
+    label: "Craft Process",
+    image:
+      "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    label: "Calligraphy",
+    image:
+      "https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    label: "Handmade Frame",
+    image:
+      "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    label: "Finished Artwork",
+    image:
+      "https://images.unsplash.com/photo-1578926375605-eaf7559b1458?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    label: "Packaging",
+    image:
+      "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    label: "Custom Design",
+    image:
+      "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=800&q=80",
+  },
 ];
 
 export function GallerySection() {
@@ -330,12 +353,8 @@ export function FinalCta() {
   return (
     <section className="bg-brown">
       <div className="mx-auto max-w-3xl px-5 py-20 text-center sm:px-8 md:py-28">
-        <p className="text-[0.65rem] uppercase tracking-[0.28em] text-gold">
-          Meer Divine Art
-        </p>
-        <h2 className="mt-4 text-4xl text-ivory sm:text-5xl">
-          Bring Meaning To Your Space
-        </h2>
+        <p className="text-[0.65rem] uppercase tracking-[0.28em] text-gold">Meer Divine Art</p>
+        <h2 className="mt-4 text-4xl text-ivory sm:text-5xl">Bring Meaning To Your Space</h2>
         <p className="mx-auto mt-5 max-w-lg leading-relaxed text-ivory/70">
           Explore handcrafted art created to make your walls feel personal.
         </p>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ShoppingBag, Trash2, CheckCircle2, ArrowLeft } from "lucide-react";
+import { ShoppingBag, Trash2, CheckCircle2, ArrowLeft, AlertCircle } from "lucide-react";
 import { PageHero } from "@/components/ui-kit";
 import { formatPrice } from "@/data/catalog";
 import { useShop } from "@/store/shop";
@@ -11,18 +11,85 @@ export const Route = createFileRoute("/cart")({
   component: CartCheckoutPage,
 });
 
+interface FormErrors {
+  name?: string;
+  phone?: string;
+  email?: string;
+  city?: string;
+  address?: string;
+}
+
+const validateField = (fieldName: string, value: string): string | undefined => {
+  switch (fieldName) {
+    case "name":
+      if (!value.trim()) return "Full Name is required.";
+      if (value.trim().length < 3) return "Name must be at least 3 characters long.";
+      return undefined;
+    case "phone": {
+      const digitsOnly = value.replace(/\D/g, "");
+      if (!digitsOnly) return "Phone number is required.";
+      if (digitsOnly.length !== 11)
+        return "Phone number must be exactly 11 digits (e.g. 03001234567).";
+      return undefined;
+    }
+    case "email": {
+      if (value.trim()) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value.trim())) {
+          return "Please enter a valid email address (e.g. name@domain.com).";
+        }
+      }
+      return undefined;
+    }
+    case "city":
+      if (!value.trim()) return "City is required.";
+      if (value.trim().length < 2) return "Please enter a valid city name.";
+      return undefined;
+    case "address":
+      if (!value.trim()) return "Complete shipping address is required.";
+      if (value.trim().length < 8) return "Please provide street and house details for delivery.";
+      return undefined;
+    default:
+      return undefined;
+  }
+};
+
 function CartCheckoutPage() {
   const navigate = useNavigate();
-  const { cart, removeFromCart, setQuantity, subtotal } = useShop();
+  const { cart, removeFromCart, setQuantity, subtotal, getProduct, clearCart } = useShop();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("Lahore");
-  const [notes, setNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [placedOrder, setPlacedOrder] = useState<any>(null);
+
+  // Form Validation State
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [errors, setErrors] = useState<FormErrors>({});
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Restrict input to digits only and maximum 11 digits
+    const numeric = e.target.value.replace(/\D/g, "").slice(0, 11);
+    setPhone(numeric);
+    if (touched.phone) {
+      setErrors((prev) => ({ ...prev, phone: validateField("phone", numeric) }));
+    }
+  };
+
+  const handleChange = (field: keyof FormErrors, value: string, setter: (val: string) => void) => {
+    setter(value);
+    if (touched[field]) {
+      setErrors((prev) => ({ ...prev, [field]: validateField(field, value) }));
+    }
+  };
+
+  const handleBlur = (field: keyof FormErrors, value: string) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+    setErrors((prev) => ({ ...prev, [field]: validateField(field, value) }));
+  };
 
   const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,8 +98,20 @@ function CartCheckoutPage() {
       return;
     }
 
-    if (!name || !phone || !address || !city) {
-      toast.error("Please fill in your name, phone number, city, and shipping address.");
+    const newErrors: FormErrors = {
+      name: validateField("name", name),
+      phone: validateField("phone", phone),
+      email: validateField("email", email),
+      city: validateField("city", city),
+      address: validateField("address", address),
+    };
+
+    setErrors(newErrors);
+    setTouched({ name: true, phone: true, email: true, city: true, address: true });
+
+    const firstError = Object.values(newErrors).find((err) => err !== undefined);
+    if (firstError) {
+      toast.error(firstError);
       return;
     }
 
@@ -41,18 +120,23 @@ function CartCheckoutPage() {
     try {
       const orderPayload = {
         customer: {
-          name,
-          email: email || `${phone.replace(/\D/g, "")}@customer.com`,
-          phone,
-          address,
-          city,
+          name: name.trim(),
+          email: email.trim() || `${phone}@customer.com`,
+          phone: phone.trim(),
+          address: address.trim(),
+          city: city.trim(),
         },
-        items: cart.map((item) => ({
-          productId: item.productId,
-          quantity: item.quantity,
-          size: item.size,
-          frameColor: item.frameColor,
-        })),
+        items: cart.map((item) => {
+          const p = getProduct(item.productId);
+          return {
+            productId: item.productId,
+            name: p ? p.name : item.productId,
+            price: p ? p.price : 0,
+            quantity: item.quantity,
+            size: item.size,
+            frameColor: item.frameColor,
+          };
+        }),
         paymentMethod: "Cash on Delivery",
       };
 
@@ -60,6 +144,7 @@ function CartCheckoutPage() {
       if (res.success) {
         toast.success("Order placed successfully! We will contact you to confirm delivery.");
         setPlacedOrder(res.data);
+        clearCart();
       }
     } catch (err: any) {
       toast.error(err.message || "Could not place order. Please try again.");
@@ -149,7 +234,7 @@ function CartCheckoutPage() {
                   const title = prod ? prod.name : item.productId;
                   const itemPrice = prod ? prod.price : 0;
                   const imgUrl = prod && prod.images && prod.images.length > 0
-                    ? (typeof prod.images[0] === "string" ? prod.images[0] : prod.images[0].url)
+                    ? (typeof prod.images[0] === "string" ? prod.images[0] : (prod.images[0] as any).url)
                     : "";
 
                   return (
@@ -229,19 +314,29 @@ function CartCheckoutPage() {
                   Shipping Information
                 </h2>
 
-                <form onSubmit={handleSubmitOrder} className="mt-6 space-y-4 text-xs">
+                <form onSubmit={handleSubmitOrder} noValidate className="mt-6 space-y-4 text-xs">
                   <div>
                     <label className="block font-semibold uppercase tracking-[0.18em] text-burnt">
                       Full Name *
                     </label>
                     <input
                       type="text"
-                      required
                       value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      onChange={(e) => handleChange("name", e.target.value, setName)}
+                      onBlur={() => handleBlur("name", name)}
                       placeholder="e.g. Ayesha Khan"
-                      className="mt-1.5 w-full border border-gold/40 bg-ivory px-3.5 py-2.5 text-sm text-brown outline-none focus:border-gold"
+                      className={`mt-1.5 w-full border px-3.5 py-2.5 text-sm outline-none transition-colors ${
+                        touched.name && errors.name
+                          ? "border-red-500 bg-red-50/20 text-brown focus:border-red-600"
+                          : "border-gold/40 bg-ivory text-brown focus:border-gold"
+                      }`}
                     />
+                    {touched.name && errors.name ? (
+                      <p className="mt-1 flex items-center gap-1 text-[0.7rem] text-red-600 font-medium">
+                        <AlertCircle className="h-3 w-3 shrink-0" />
+                        {errors.name}
+                      </p>
+                    ) : null}
                   </div>
 
                   <div>
@@ -250,12 +345,25 @@ function CartCheckoutPage() {
                     </label>
                     <input
                       type="tel"
-                      required
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="0300 1234567"
-                      className="mt-1.5 w-full border border-gold/40 bg-ivory px-3.5 py-2.5 text-sm text-brown outline-none focus:border-gold"
+                      onChange={handlePhoneChange}
+                      onBlur={() => handleBlur("phone", phone)}
+                      placeholder="03001234567"
+                      maxLength={11}
+                      className={`mt-1.5 w-full border px-3.5 py-2.5 text-sm outline-none transition-colors ${
+                        touched.phone && errors.phone
+                          ? "border-red-500 bg-red-50/20 text-brown focus:border-red-600"
+                          : "border-gold/40 bg-ivory text-brown focus:border-gold"
+                      }`}
                     />
+                    {touched.phone && errors.phone ? (
+                      <p className="mt-1 flex items-center gap-1 text-[0.7rem] text-red-600 font-medium">
+                        <AlertCircle className="h-3 w-3 shrink-0" />
+                        {errors.phone}
+                      </p>
+                    ) : (
+                      <p className="mt-1 text-[0.65rem] text-brown/60">Exactly 11 digits (e.g. 03001234567)</p>
+                    )}
                   </div>
 
                   <div>
@@ -265,10 +373,21 @@ function CartCheckoutPage() {
                     <input
                       type="email"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => handleChange("email", e.target.value, setEmail)}
+                      onBlur={() => handleBlur("email", email)}
                       placeholder="ayesha@example.com"
-                      className="mt-1.5 w-full border border-gold/40 bg-ivory px-3.5 py-2.5 text-sm text-brown outline-none focus:border-gold"
+                      className={`mt-1.5 w-full border px-3.5 py-2.5 text-sm outline-none transition-colors ${
+                        touched.email && errors.email
+                          ? "border-red-500 bg-red-50/20 text-brown focus:border-red-600"
+                          : "border-gold/40 bg-ivory text-brown focus:border-gold"
+                      }`}
                     />
+                    {touched.email && errors.email ? (
+                      <p className="mt-1 flex items-center gap-1 text-[0.7rem] text-red-600 font-medium">
+                        <AlertCircle className="h-3 w-3 shrink-0" />
+                        {errors.email}
+                      </p>
+                    ) : null}
                   </div>
 
                   <div>
@@ -277,12 +396,22 @@ function CartCheckoutPage() {
                     </label>
                     <input
                       type="text"
-                      required
                       value={city}
-                      onChange={(e) => setCity(e.target.value)}
+                      onChange={(e) => handleChange("city", e.target.value, setCity)}
+                      onBlur={() => handleBlur("city", city)}
                       placeholder="Lahore, Karachi, Islamabad..."
-                      className="mt-1.5 w-full border border-gold/40 bg-ivory px-3.5 py-2.5 text-sm text-brown outline-none focus:border-gold"
+                      className={`mt-1.5 w-full border px-3.5 py-2.5 text-sm outline-none transition-colors ${
+                        touched.city && errors.city
+                          ? "border-red-500 bg-red-50/20 text-brown focus:border-red-600"
+                          : "border-gold/40 bg-ivory text-brown focus:border-gold"
+                      }`}
                     />
+                    {touched.city && errors.city ? (
+                      <p className="mt-1 flex items-center gap-1 text-[0.7rem] text-red-600 font-medium">
+                        <AlertCircle className="h-3 w-3 shrink-0" />
+                        {errors.city}
+                      </p>
+                    ) : null}
                   </div>
 
                   <div>
@@ -290,13 +419,23 @@ function CartCheckoutPage() {
                       Complete Shipping Address *
                     </label>
                     <textarea
-                      required
                       rows={3}
                       value={address}
-                      onChange={(e) => setAddress(e.target.value)}
+                      onChange={(e) => handleChange("address", e.target.value, setAddress)}
+                      onBlur={() => handleBlur("address", address)}
                       placeholder="House number, street, sector/area..."
-                      className="mt-1.5 w-full border border-gold/40 bg-ivory px-3.5 py-2.5 text-sm text-brown outline-none focus:border-gold"
+                      className={`mt-1.5 w-full border px-3.5 py-2.5 text-sm outline-none transition-colors ${
+                        touched.address && errors.address
+                          ? "border-red-500 bg-red-50/20 text-brown focus:border-red-600"
+                          : "border-gold/40 bg-ivory text-brown focus:border-gold"
+                      }`}
                     />
+                    {touched.address && errors.address ? (
+                      <p className="mt-1 flex items-center gap-1 text-[0.7rem] text-red-600 font-medium">
+                        <AlertCircle className="h-3 w-3 shrink-0" />
+                        {errors.address}
+                      </p>
+                    ) : null}
                   </div>
 
                   <div className="pt-2 border-t border-gold/20">

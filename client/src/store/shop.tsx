@@ -2,11 +2,17 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
 } from "react";
-import { products, type Product } from "@/data/catalog";
+import {
+  mapApiProductToProduct,
+  products as staticProducts,
+  type Product,
+} from "@/data/catalog";
+import { api } from "@/services/api";
 
 export interface CartItem {
   productId: string;
@@ -24,6 +30,10 @@ interface ShopState {
   cartOpen: boolean;
   searchOpen: boolean;
   menuOpen: boolean;
+  allProducts: Product[];
+  getProduct: (idOrSlug: string) => Product | undefined;
+  refreshProducts: () => Promise<void>;
+  clearCart: () => void;
   addToCart: (
     productId: string,
     options?: { quantity?: number; size?: string; frameColor?: string; material?: string },
@@ -39,14 +49,51 @@ interface ShopState {
 
 const ShopContext = createContext<ShopState | null>(null);
 
-const priceOf = (id: string) => products.find((p) => p.id === id)?.price ?? 0;
-
 export function ShopProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [wishlist, setWishlist] = useState<string[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [allProducts, setAllProducts] = useState<Product[]>(staticProducts);
+
+  const fetchLiveProducts = useCallback(async () => {
+    try {
+      const res = await api.getProducts({ limit: 100 });
+      if (res.success && res.data && Array.isArray(res.data.products)) {
+        const dbMapped = res.data.products.map((p: any) => mapApiProductToProduct(p));
+        setAllProducts(dbMapped);
+      }
+    } catch (err) {
+      // Fallback stays with staticProducts if offline/network error
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchLiveProducts();
+  }, [fetchLiveProducts]);
+
+  const getProduct = useCallback(
+    (idOrSlug: string): Product | undefined => {
+      if (!idOrSlug) return undefined;
+      return allProducts.find(
+        (p) => p.id === idOrSlug || p.slug === idOrSlug || (p as any)._id === idOrSlug
+      );
+    },
+    [allProducts]
+  );
+
+  const priceOf = useCallback(
+    (id: string) => {
+      const prod = getProduct(id);
+      return prod ? prod.price : 0;
+    },
+    [getProduct]
+  );
+
+  const clearCart = useCallback(() => {
+    setCart([]);
+  }, []);
 
   const addToCart: ShopState["addToCart"] = useCallback(
     (productId, options) => {
@@ -62,7 +109,7 @@ export function ShopProvider({ children }: { children: ReactNode }) {
           return prev.map((i) =>
             i === existing
               ? { ...i, quantity: i.quantity + (options?.quantity ?? 1) }
-              : i,
+              : i
           );
         }
         return [
@@ -78,7 +125,7 @@ export function ShopProvider({ children }: { children: ReactNode }) {
       });
       setCartOpen(true);
     },
-    [],
+    []
   );
 
   const removeFromCart = useCallback((productId: string) => {
@@ -89,7 +136,7 @@ export function ShopProvider({ children }: { children: ReactNode }) {
     setCart((prev) =>
       quantity <= 0
         ? prev.filter((i) => i.productId !== productId)
-        : prev.map((i) => (i.productId === productId ? { ...i, quantity } : i)),
+        : prev.map((i) => (i.productId === productId ? { ...i, quantity } : i))
     );
   }, []);
 
@@ -97,7 +144,7 @@ export function ShopProvider({ children }: { children: ReactNode }) {
     setWishlist((prev) =>
       prev.includes(productId)
         ? prev.filter((id) => id !== productId)
-        : [...prev, productId],
+        : [...prev, productId]
     );
   }, []);
 
@@ -105,7 +152,7 @@ export function ShopProvider({ children }: { children: ReactNode }) {
     const cartCount = cart.reduce((n, i) => n + i.quantity, 0);
     const subtotal = cart.reduce(
       (sum, i) => sum + priceOf(i.productId) * i.quantity,
-      0,
+      0
     );
     return {
       cart,
@@ -115,6 +162,10 @@ export function ShopProvider({ children }: { children: ReactNode }) {
       cartOpen,
       searchOpen,
       menuOpen,
+      allProducts,
+      getProduct,
+      refreshProducts: fetchLiveProducts,
+      clearCart,
       addToCart,
       removeFromCart,
       setQuantity,
@@ -130,6 +181,11 @@ export function ShopProvider({ children }: { children: ReactNode }) {
     cartOpen,
     searchOpen,
     menuOpen,
+    allProducts,
+    getProduct,
+    fetchLiveProducts,
+    priceOf,
+    clearCart,
     addToCart,
     removeFromCart,
     setQuantity,
@@ -145,5 +201,13 @@ export function useShop() {
   return ctx;
 }
 
-export const cartProduct = (item: CartItem): Product | undefined =>
-  products.find((p) => p.id === item.productId);
+export const cartProduct = (
+  item: CartItem,
+  catalog: Product[] = staticProducts
+): Product | undefined =>
+  catalog.find(
+    (p) =>
+      p.id === item.productId ||
+      p.slug === item.productId ||
+      (p as any)._id === item.productId
+  );

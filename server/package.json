@@ -8,7 +8,8 @@
     "start": "node server.js",
     "dev": "node server.js",
     "seed-admin": "node scripts/seedAdmin.js",
-    "seed-catalog": "node scripts/seedCatalog.js"
+    "seed-catalog": "node scripts/seedCatalog.js",
+    "clear-catalog": "node scripts/clearCatalog.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
