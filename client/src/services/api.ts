@@ -1,6 +1,7 @@
 import { toast } from "sonner";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "meerdivineart-production.up.railway.app/api";
 
 export function getAdminToken(): string | null {
   if (typeof window === "undefined") return null;
@@ -16,7 +17,10 @@ export function setAdminToken(token: string | null) {
   }
 }
 
-async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+async function request<T>(
+  endpoint: string,
+  options: RequestInit = {}
+): Promise<T> {
   const token = getAdminToken();
   const headers: Record<string, string> = {
     ...(options.headers as Record<string, string>),
@@ -43,10 +47,7 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
       const errorMsg = data.message || "An unexpected error occurred";
       if (res.status === 401 && token) {
         setAdminToken(null);
-        if (
-          window.location.pathname.startsWith("/admin") &&
-          !window.location.pathname.includes("/admin/login")
-        ) {
+        if (window.location.pathname.startsWith("/admin") && !window.location.pathname.includes("/admin/login")) {
           window.location.href = "/admin/login";
         }
       }
@@ -76,7 +77,9 @@ export const api = {
   },
 
   getProfile: async () => {
-    return request<{ success: boolean; data: { id: string; email: string } }>("/auth/me");
+    return request<{ success: boolean; data: { id: string; email: string } }>(
+      "/auth/me"
+    );
   },
 
   logout: () => {
@@ -113,17 +116,23 @@ export const api = {
   },
 
   createProduct: async (formData: FormData) => {
-    return request<{ success: boolean; message: string; data: any }>("/products", {
-      method: "POST",
-      body: formData,
-    });
+    return request<{ success: boolean; message: string; data: any }>(
+      "/products",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
   },
 
   updateProduct: async (id: string, formData: FormData) => {
-    return request<{ success: boolean; message: string; data: any }>(`/products/${id}`, {
-      method: "PUT",
-      body: formData,
-    });
+    return request<{ success: boolean; message: string; data: any }>(
+      `/products/${id}`,
+      {
+        method: "PUT",
+        body: formData,
+      }
+    );
   },
 
   deleteProduct: async (id: string) => {
@@ -133,16 +142,20 @@ export const api = {
   },
 
   toggleProductStatus: async (id: string) => {
-    return request<{ success: boolean; message: string; data: any }>(`/products/${id}/status`, {
-      method: "PATCH",
-    });
+    return request<{ success: boolean; message: string; data: any }>(
+      `/products/${id}/status`,
+      { method: "PATCH" }
+    );
   },
 
   updateStock: async (id: string, stock: number) => {
-    return request<{ success: boolean; message: string; data: any }>(`/products/${id}/stock`, {
-      method: "PATCH",
-      body: JSON.stringify({ stock }),
-    });
+    return request<{ success: boolean; message: string; data: any }>(
+      `/products/${id}/stock`,
+      {
+        method: "PATCH",
+        body: JSON.stringify({ stock }),
+      }
+    );
   },
 
   // Categories
@@ -156,37 +169,48 @@ export const api = {
   },
 
   createCategory: async (formData: FormData) => {
-    return request<{ success: boolean; message: string; data: any }>("/categories", {
-      method: "POST",
-      body: formData,
-    });
+    return request<{ success: boolean; message: string; data: any }>(
+      "/categories",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
   },
 
   updateCategory: async (id: string, formData: FormData) => {
-    return request<{ success: boolean; message: string; data: any }>(`/categories/${id}`, {
-      method: "PUT",
-      body: formData,
-    });
+    return request<{ success: boolean; message: string; data: any }>(
+      `/categories/${id}`,
+      {
+        method: "PUT",
+        body: formData,
+      }
+    );
   },
 
   deleteCategory: async (id: string) => {
-    return request<{ success: boolean; message: string }>(`/categories/${id}`, {
-      method: "DELETE",
-    });
+    return request<{ success: boolean; message: string }>(
+      `/categories/${id}`,
+      { method: "DELETE" }
+    );
   },
 
   toggleCategoryStatus: async (id: string) => {
-    return request<{ success: boolean; message: string; data: any }>(`/categories/${id}/status`, {
-      method: "PATCH",
-    });
+    return request<{ success: boolean; message: string; data: any }>(
+      `/categories/${id}/status`,
+      { method: "PATCH" }
+    );
   },
 
   // Orders
   createOrder: async (orderPayload: any) => {
-    return request<{ success: boolean; message: string; data: any }>("/orders", {
-      method: "POST",
-      body: JSON.stringify(orderPayload),
-    });
+    return request<{ success: boolean; message: string; data: any }>(
+      "/orders",
+      {
+        method: "POST",
+        body: JSON.stringify(orderPayload),
+      }
+    );
   },
 
   getOrders: async (params?: Record<string, string | number>) => {
@@ -214,12 +238,15 @@ export const api = {
 
   updateOrderStatus: async (
     id: string,
-    statusPayload: { orderStatus?: string; paymentStatus?: string },
+    statusPayload: { orderStatus?: string; paymentStatus?: string }
   ) => {
-    return request<{ success: boolean; message: string; data: any }>(`/orders/${id}/status`, {
-      method: "PATCH",
-      body: JSON.stringify(statusPayload),
-    });
+    return request<{ success: boolean; message: string; data: any }>(
+      `/orders/${id}/status`,
+      {
+        method: "PATCH",
+        body: JSON.stringify(statusPayload),
+      }
+    );
   },
 
   // Admin Dashboard & Analytics
