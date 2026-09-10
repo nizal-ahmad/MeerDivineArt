@@ -1,15 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
-  BenefitsSection,
   BestsellersSection,
   BrandStorySection,
   CategorySection,
   CustomArtSection,
+  DealsSection,
   FeaturedSection,
-  FinalCta,
-  GallerySection,
   HeroSection,
-  TestimonialsSection,
+  HomeStoriesSection,
+  PromoBannersSection,
+  SignatureBannersSection,
+  TexturedCanvasBannerSection,
 } from "@/components/home/HomeSections";
 
 const title = "Meer Divine Art — Handcrafted Calligraphy & Islamic Wall Art";
@@ -32,15 +33,16 @@ function Index() {
   return (
     <>
       <HeroSection />
+      <DealsSection />
       <CategorySection />
+      <PromoBannersSection />
       <FeaturedSection />
       <CustomArtSection />
       <BestsellersSection />
-      <BenefitsSection />
+      <TexturedCanvasBannerSection />
       <BrandStorySection />
-      <GallerySection />
-      <TestimonialsSection />
-      <FinalCta />
+      <SignatureBannersSection />
+      <HomeStoriesSection />
     </>
   );
 }

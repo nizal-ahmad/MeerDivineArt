@@ -12,11 +12,12 @@ export const Route = createFileRoute("/cart")({
 });
 
 interface FormErrors {
-  name?: string;
-  phone?: string;
-  email?: string;
-  city?: string;
-  address?: string;
+  name?: string | undefined;
+  phone?: string | undefined;
+  email?: string | undefined;
+  city?: string | undefined;
+  address?: string | undefined;
+  [key: string]: string | undefined;
 }
 
 const validateField = (fieldName: string, value: string): string | undefined => {

@@ -17,9 +17,9 @@ import { api } from "@/services/api";
 export interface CartItem {
   productId: string;
   quantity: number;
-  size?: string;
-  frameColor?: string;
-  material?: string;
+  size?: string | undefined;
+  frameColor?: string | undefined;
+  material?: string | undefined;
 }
 
 interface ShopState {

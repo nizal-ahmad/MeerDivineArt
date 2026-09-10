@@ -1,8 +1,14 @@
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Hand, Heart, Instagram, PenTool, Sparkles } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Hand, Heart, Instagram, PenTool, Sparkles } from "lucide-react";
 import { ImagePlaceholder } from "@/components/ImagePlaceholder";
 import { ProductCard, ProductGrid } from "@/components/ProductCard";
 import { LinkButton, SectionHeading, Stars } from "@/components/ui-kit";
+export { DealsSection } from "./DealsSection";
+export { PromoBannersSection } from "./PromoBannersSection";
+export { TexturedCanvasBannerSection } from "./TexturedCanvasBannerSection";
+export { SignatureBannersSection } from "./SignatureBannersSection";
+export { HomeStoriesSection } from "./HomeStoriesSection";
 import {
   benefits,
   bestsellers,
@@ -12,6 +18,8 @@ import {
 } from "@/data/catalog";
 import { useShop } from "@/store/shop";
 import heroBg from "@/assets/hero_bg.jpg";
+import ourStoryCraft from "@/assets/our_story_craft.png";
+import customArtPreview from "@/assets/custom_art_preview.png";
 
 export function HeroSection() {
   return (
@@ -76,31 +84,35 @@ export function CategorySection() {
         title="Explore Our Collections"
         subtitle="Discover handcrafted pieces made to add meaning and beauty to your space."
       />
-      <div className="mt-12 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3">
-        {homeCategoryCards.map((card, i) => (
+      <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {homeCategoryCards.map((card) => (
           <Link
             key={card.label}
-            to="/category/$slug"
-            params={{ slug: card.slug }}
-            className="group block bg-card transition-shadow duration-500 hover:shadow-[var(--shadow-soft)]"
+            to="/shop"
+            search={{ category: card.slug }}
+            className="group flex flex-col h-full overflow-hidden rounded-2xl border border-gold/25 bg-card shadow-xs transition-all duration-300 hover:shadow-md hover:border-gold/50"
           >
-            <ImagePlaceholder
-              type="category"
-              label={card.label}
-              src={card.image}
-              ratio={i % 3 === 1 ? "aspect-[4/5]" : i % 3 === 2 ? "aspect-square" : undefined}
-            />
-            <div className="flex items-center justify-between px-4 py-4 sm:px-5">
+            <div className="w-full overflow-hidden">
+              <ImagePlaceholder
+                type="category"
+                label={card.label}
+                src={card.image}
+                ratio="aspect-[4/3]"
+              />
+            </div>
+            <div className="flex flex-1 items-center justify-between p-4 sm:p-5 bg-card border-t border-gold/15">
               <div>
-                <h3 className="text-lg text-brown">{card.label}</h3>
-                <p className="mt-1 text-[0.6rem] uppercase tracking-[0.2em] text-burnt/80">
+                <h3 className="text-base sm:text-lg font-semibold text-brown">{card.label}</h3>
+                <p className="mt-1 text-[0.65rem] uppercase tracking-[0.2em] text-burnt font-medium">
                   Explore Collection
                 </p>
               </div>
-              <ArrowRight
-                className="h-4 w-4 text-gold transition-transform duration-300 group-hover:translate-x-1"
-                strokeWidth={1.4}
-              />
+              <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full border border-gold/30 bg-beige/50 text-gold transition-all duration-300 group-hover:bg-gold group-hover:text-brown group-hover:border-gold">
+                <ArrowRight
+                  className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5"
+                  strokeWidth={1.8}
+                />
+              </div>
             </div>
           </Link>
         ))}
@@ -139,22 +151,25 @@ export function FeaturedSection() {
 export function CustomArtSection() {
   return (
     <section className="mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-24">
-      <div className="grid items-center gap-10 md:grid-cols-2 md:gap-16">
-        <ImagePlaceholder
-          type="story"
-          label="Custom Artwork Image"
-          src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=900&q=80"
-        />
-        <div>
+      <div className="grid items-stretch gap-10 md:grid-cols-2 md:gap-16">
+        <div className="group/ph relative w-full h-64 sm:h-80 md:h-full overflow-hidden rounded-2xl border border-gold/30 bg-ivory shadow-xs">
+          <img
+            src={customArtPreview}
+            alt="Custom Artwork Image"
+            className="h-full w-full object-cover transition-transform duration-700 group-hover/ph:scale-[1.04] md:absolute md:inset-0"
+          />
+          <div className="pointer-events-none absolute inset-3 border border-gold/25" />
+        </div>
+        <div className="flex flex-col justify-center">
           <p className="eyebrow">Custom Art</p>
-          <h2 className="mt-4 text-3xl text-brown sm:text-4xl md:text-5xl">
+          <h2 className="mt-3 text-3xl font-semibold text-brown sm:text-4xl md:text-5xl leading-tight">
             Made Especially For You
           </h2>
-          <div className="rule-gold mt-5 w-24" />
-          <p className="mt-5 max-w-md leading-relaxed text-brown/70">
+          <div className="rule-gold mt-4 w-24" />
+          <p className="mt-4 max-w-md leading-relaxed text-brown/70">
             Turn your name, memories and meaningful words into a handcrafted piece of art.
           </p>
-          <ul className="mt-7 space-y-3">
+          <ul className="mt-6 space-y-3">
             {[
               "Personalized designs",
               "Handcrafted finishing",
@@ -162,13 +177,13 @@ export function CustomArtSection() {
               "Made according to your requirements",
             ].map((item) => (
               <li key={item} className="flex items-center gap-3 text-brown/80">
-                <span className="text-gold">✓</span>
-                <span className="text-sm">{item}</span>
+                <span className="text-gold font-bold">✓</span>
+                <span className="text-sm font-medium">{item}</span>
               </li>
             ))}
           </ul>
-          <div className="mt-9">
-            <LinkButton to="/category/personalized-art" variant="gold">
+          <div className="mt-8">
+            <LinkButton to="/shop" search={{ category: "personalized-art" }} variant="gold">
               Create Your Custom Piece
             </LinkButton>
           </div>
@@ -180,30 +195,101 @@ export function CustomArtSection() {
 
 export function BestsellersSection() {
   const { allProducts } = useShop();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [thumbWidthRatio, setThumbWidthRatio] = useState(0.2);
+
   const bestsellersList = allProducts.filter((p) => p.isBestseller);
-  const displayBestsellers = (bestsellersList.length > 0 ? bestsellersList : allProducts).slice(
-    0,
-    8,
-  );
+  const displayBestsellers = (bestsellersList.length > 0 ? bestsellersList : allProducts).slice(0, 10);
+  const items = displayBestsellers.length > 0 ? displayBestsellers : bestsellers;
+
+  const handleScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+    const maxScroll = scrollWidth - clientWidth;
+    if (maxScroll <= 0) {
+      setScrollProgress(0);
+      setThumbWidthRatio(1);
+    } else {
+      const progress = scrollLeft / maxScroll;
+      setScrollProgress(Math.min(Math.max(progress, 0), 1));
+      setThumbWidthRatio(Math.max(clientWidth / scrollWidth, 0.15));
+    }
+  }, []);
+
+  useEffect(() => {
+    handleScroll();
+    window.addEventListener("resize", handleScroll);
+    return () => window.removeEventListener("resize", handleScroll);
+  }, [handleScroll, items]);
+
+  const scrollByAmount = (direction: "left" | "right") => {
+    if (!scrollRef.current) return;
+    const containerWidth = scrollRef.current.clientWidth;
+    const scrollAmount = direction === "left" ? -containerWidth * 0.75 : containerWidth * 0.75;
+    scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+  };
 
   return (
-    <section className="border-y border-gold/20 bg-beige/40 py-16 md:py-24">
+    <section className="border-y border-gold/20 bg-beige/40 py-12 sm:py-16 md:py-20">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <SectionHeading
-          eyebrow="Loved Most"
-          title="Our Bestsellers"
-          subtitle="Pieces our customers return to, again and again."
-        />
-      </div>
-      <div className="no-scrollbar mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 sm:gap-6 sm:px-8 lg:mx-auto lg:max-w-7xl">
-        {(displayBestsellers.length > 0 ? displayBestsellers : bestsellers).map((p) => (
-          <div
-            key={p.id}
-            className="w-[72%] shrink-0 snap-start sm:w-[45%] lg:w-[calc(25%-1.125rem)]"
-          >
-            <ProductCard product={p} />
+        <div className="relative flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+          <SectionHeading
+            eyebrow="Loved Most"
+            title="Our Bestsellers"
+            subtitle="Pieces our customers return to, again and again."
+          />
+
+          {/* Desktop Chevron Navigation Controls */}
+          <div className="hidden sm:flex items-center gap-2 pb-1">
+            <button
+              type="button"
+              onClick={() => scrollByAmount("left")}
+              aria-label="Previous Bestsellers"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-gold/40 bg-white text-brown shadow-xs transition-all duration-200 hover:bg-gold/20 hover:border-gold active:scale-95 cursor-pointer"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollByAmount("right")}
+              aria-label="Next Bestsellers"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-gold/40 bg-white text-brown shadow-xs transition-all duration-200 hover:bg-gold/20 hover:border-gold active:scale-95 cursor-pointer"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
           </div>
-        ))}
+        </div>
+
+        {/* Scrollable Carousel Row */}
+        <div
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="no-scrollbar mt-10 flex gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 pt-1"
+        >
+          {items.map((p) => (
+            <div
+              key={p.id}
+              className="min-w-[220px] w-[220px] sm:min-w-[260px] sm:w-[260px] md:min-w-[280px] md:w-[280px] flex-shrink-0 snap-start select-none"
+            >
+              <ProductCard product={p} />
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom Progress Scrollbar Indicator */}
+        <div className="mt-6 w-full px-1">
+          <div className="relative h-[3px] w-full rounded-full bg-neutral-200 overflow-hidden">
+            <div
+              className="absolute top-0 bottom-0 bg-charcoal rounded-full transition-all duration-150 ease-out"
+              style={{
+                width: `${thumbWidthRatio * 100}%`,
+                left: `${scrollProgress * (100 - thumbWidthRatio * 100)}%`,
+              }}
+            />
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -240,27 +326,30 @@ export function BenefitsSection() {
 export function BrandStorySection() {
   return (
     <section className="border-y border-gold/20 bg-card/60">
-      <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 py-16 sm:px-8 md:grid-cols-2 md:gap-16 md:py-24">
-        <ImagePlaceholder
-          type="story"
-          label="Studio Image"
-          src="https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=900&q=80"
-        />
-        <div>
+      <div className="mx-auto grid max-w-7xl items-stretch gap-10 px-5 py-16 sm:px-8 md:grid-cols-2 md:gap-16 md:py-24">
+        <div className="group/ph relative w-full h-64 sm:h-80 md:h-full overflow-hidden rounded-2xl border border-gold/30 bg-ivory shadow-xs">
+          <img
+            src={ourStoryCraft}
+            alt="Meer Divine Art Studio Crafting"
+            className="h-full w-full object-cover transition-transform duration-700 group-hover/ph:scale-[1.04] md:absolute md:inset-0"
+          />
+          <div className="pointer-events-none absolute inset-3 border border-gold/25" />
+        </div>
+        <div className="flex flex-col justify-center">
           <p className="eyebrow">Our Story</p>
-          <h2 className="mt-4 text-3xl text-brown sm:text-4xl md:text-5xl">
+          <h2 className="mt-3 text-3xl font-semibold text-brown sm:text-4xl md:text-5xl leading-tight">
             Where Craft Meets Meaning
           </h2>
-          <div className="rule-gold mt-5 w-24" />
-          <p className="mt-6 leading-relaxed text-brown/70">
+          <div className="rule-gold mt-4 w-24" />
+          <p className="mt-5 leading-relaxed text-brown/75">
             At Meer Divine Art, we believe art should be more than something beautiful on a wall. It
             should carry meaning, emotion and a story.
           </p>
-          <p className="mt-4 leading-relaxed text-brown/70">
+          <p className="mt-4 leading-relaxed text-brown/75">
             Every piece is thoughtfully handcrafted to bring timeless beauty into your home and
             create something you can truly connect with.
           </p>
-          <div className="mt-9">
+          <div className="mt-8">
             <LinkButton to="/about" variant="outline">
               Discover Our Story
             </LinkButton>

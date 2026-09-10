@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_URL || "meerdivineart-production.up.railway.app/api";
+  (import.meta.env["VITE_API_URL"] as string | undefined) || "meerdivineart-production.up.railway.app/api";
 
 export function getAdminToken(): string | null {
   if (typeof window === "undefined") return null;

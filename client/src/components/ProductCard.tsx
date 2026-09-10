@@ -94,34 +94,36 @@ export function ProductCard({ product }: { product: Product & { slug?: string; i
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col px-4 py-4 sm:px-5">
-        <p className="text-[0.6rem] uppercase tracking-[0.22em] text-burnt/80">
-          {product.categoryName}
-        </p>
-        <h3 className="mt-2 text-lg leading-snug text-brown">
-          <Link
-            to="/products/$slug"
-            params={{ slug }}
-            className="transition-colors hover:text-burnt"
-          >
-            {product.name}
-          </Link>
-        </h3>
-        <div className="mt-2 flex items-baseline gap-2">
-          <span className="text-sm font-semibold text-brown">
-            {formatPrice(product.price)}
-          </span>
-          {product.oldPrice ? (
-            <span className="text-xs text-brown/45 line-through">
-              {formatPrice(product.oldPrice)}
+      <div className="flex flex-1 flex-col justify-between px-4 py-4 sm:px-5">
+        <div>
+          <p className="text-[0.6rem] uppercase tracking-[0.22em] text-burnt/80 font-medium">
+            {product.categoryName}
+          </p>
+          <h3 className="mt-2 text-base sm:text-lg leading-snug text-brown line-clamp-2 min-h-[2.6rem] sm:min-h-[2.8rem]">
+            <Link
+              to="/products/$slug"
+              params={{ slug }}
+              className="transition-colors hover:text-burnt"
+            >
+              {product.name}
+            </Link>
+          </h3>
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="text-sm font-semibold text-brown">
+              {formatPrice(product.price)}
             </span>
-          ) : null}
+            {product.oldPrice ? (
+              <span className="text-xs text-brown/45 line-through">
+                {formatPrice(product.oldPrice)}
+              </span>
+            ) : null}
+          </div>
         </div>
 
         <button
           type="button"
           onClick={() => addToCart(product.id)}
-          className="mt-4 inline-flex w-full items-center justify-center gap-2 border border-brown/30 px-4 py-3 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-brown transition-all duration-300 hover:border-brown hover:bg-brown hover:text-ivory"
+          className="mt-4 inline-flex w-full items-center justify-center gap-2 border border-brown/30 px-4 py-3 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-brown transition-all duration-300 hover:border-brown hover:bg-brown hover:text-ivory cursor-pointer"
         >
           <ShoppingBag className="h-3.5 w-3.5" strokeWidth={1.5} />
           Add to Cart

@@ -25,6 +25,14 @@ export const Route = createFileRoute("/contact")({
   component: ContactPage,
 });
 
+interface ContactFormErrors {
+  name?: string;
+  email?: string;
+  phone?: string;
+  subject?: string;
+  message?: string;
+}
+
 function ContactPage() {
   const [formData, setFormData] = useState({
     name: "",
@@ -34,11 +42,11 @@ function ContactPage() {
     message: "",
   });
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<ContactFormErrors>({});
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const whatsappPhone = "923001234567";
+  const whatsappPhone = "923242894377";
   const whatsappUrl = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(
     "Hello Meer Divine Art, I would like to make an inquiry about your artwork."
   )}`;
@@ -169,7 +177,7 @@ function ContactPage() {
                 </div>
                 <div>
                   <p className="text-xs font-bold uppercase tracking-wider text-brown">Studio Location</p>
-                  <p className="mt-1 text-xs text-brown/75">Lahore & Karachi, Pakistan (Nationwide Delivery)</p>
+                  <p className="mt-1 text-xs text-brown/75">Master City, Gujranwala, Pakistan</p>
                 </div>
               </div>
 
@@ -179,7 +187,7 @@ function ContactPage() {
                 </div>
                 <div>
                   <p className="text-xs font-bold uppercase tracking-wider text-brown">Phone / WhatsApp</p>
-                  <p className="mt-1 text-xs text-brown/75">+92 300 1234567</p>
+                  <p className="mt-1 text-xs text-brown/75">+92 324 2894377</p>
                 </div>
               </div>
 
@@ -189,7 +197,7 @@ function ContactPage() {
                 </div>
                 <div>
                   <p className="text-xs font-bold uppercase tracking-wider text-brown">Email Inquiry</p>
-                  <p className="mt-1 text-xs text-brown/75">info@meerdivineart.com</p>
+                  <p className="mt-1 text-xs text-brown/75">meerdivineart@gmail.com</p>
                 </div>
               </div>
 

@@ -83,9 +83,10 @@ function ProductDetailsPage() {
     api
       .getProductBySlug(slug)
       .then((res) => {
-        if (!isMounted) return;
+        if (!isMounted) return null;
         if (res.success && res.data) {
           setProduct(res.data);
+          return null;
         } else {
           // Fallback to ID query or static product
           return api.getProduct(slug);
