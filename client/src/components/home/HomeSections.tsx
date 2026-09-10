@@ -11,86 +11,55 @@ import {
   testimonials,
 } from "@/data/catalog";
 import { useShop } from "@/store/shop";
-import heroImage from "../../../assets/hero.jpeg";
+import heroBg from "@/assets/hero_bg.jpg";
 
 export function HeroSection() {
   return (
-    <section className="mx-auto flex w-full max-w-7xl flex-col justify-center px-3 py-3 sm:px-6 min-h-[calc(100dvh-6.5rem)] md:h-[calc(100dvh-6.5rem)] lg:h-[calc(100dvh-6.75rem)] lg:px-8 lg:py-3.5">
-      <div className="relative flex-1 overflow-hidden rounded-2xl border border-gold/30 bg-brown shadow-[var(--shadow-lift)] lg:rounded-3xl">
-        <div className="grid h-full w-full items-center lg:grid-cols-12">
-          {/* Left Text Content Panel */}
-          <div className="relative z-10 flex h-full flex-col justify-center p-6 sm:p-8 md:p-10 lg:col-span-6 lg:p-12 xl:p-14">
-            {/* Background Pattern Watermark Motif */}
-            <div className="pointer-events-none absolute inset-0 opacity-15">
-              <svg
-                className="h-full w-full text-gold"
-                viewBox="0 0 400 400"
-                fill="none"
-                aria-hidden="true"
-                preserveAspectRatio="xMidYMid slice"
+    <section className="mx-auto w-full max-w-7xl px-3 py-2.5 sm:px-6 lg:px-8 lg:py-3.5">
+      <div className="relative flex min-h-[320px] sm:min-h-[360px] md:min-h-[400px] lg:min-h-[440px] w-full overflow-hidden rounded-2xl border border-gold/30 bg-brown shadow-[var(--shadow-lift)] lg:rounded-3xl items-center">
+        {/* User Provided Lifestyle Background Image */}
+        <img
+          src={heroBg}
+          alt="Handcrafted Islamic Calligraphy & Carved Entrance Door Art"
+          className="absolute inset-0 h-full w-full object-cover object-[center_35%] transition-transform duration-1000 scale-105"
+        />
+
+        {/* Ambient Overlay Gradients for Cinematic Depth and Readability (Darker on Left) */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/95 via-black/65 to-black/35 lg:bg-gradient-to-r lg:from-black/85 lg:via-black/60 lg:to-black/30" />
+        
+        {/* Soft Radial Gold Rays Ambient Lighting */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-gold/20 via-transparent to-transparent opacity-70" />
+
+        {/* Hero Content (Positioned on the Left Side) */}
+        <div className="relative z-10 grid h-full w-full grid-cols-1 items-center p-5 sm:p-7 md:p-9 lg:grid-cols-12 lg:p-10">
+          <div className="flex flex-col items-start lg:col-span-7 lg:col-start-1 xl:col-span-6 xl:col-start-1 fade-up">
+            
+            {/* Original Top Badge */}
+            <div className="inline-block rounded-sm bg-burnt px-3.5 py-1 text-[0.65rem] font-bold tracking-[0.2em] text-ivory uppercase shadow-sm mb-2.5">
+              LATEST COLLECTION
+            </div>
+
+            {/* Original Main Headline */}
+            <h1 className="font-display text-3xl font-bold uppercase tracking-wider text-white leading-[1.08] sm:text-4xl md:text-4xl lg:text-5xl xl:text-5xl drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">
+              HANDCRAFTED <br />
+              <span className="text-gold">ISLAMIC WALL ART</span>
+            </h1>
+
+            {/* Original Description Paragraph */}
+            <p className="mt-3 max-w-lg text-xs leading-relaxed text-ivory/85 sm:text-xs md:text-sm font-sans drop-shadow-md">
+              For spaces that seek quiet beauty, faith, and personal meaning. We take sacred
+              Arabic verses and personalized names and craft them into minimalist, luxury wall
+              art. From gold-leaf detailing to solid wood frames.
+            </p>
+
+            {/* Original CTA Action Button */}
+            <div className="mt-6">
+              <Link
+                to="/shop"
+                className="inline-flex items-center justify-center rounded-md bg-gold px-7 py-3 text-xs sm:text-sm font-bold tracking-[0.2em] text-brown uppercase shadow-[0_6px_22px_rgba(225,161,64,0.4)] transition-all duration-300 hover:bg-gold-soft hover:shadow-[0_8px_28px_rgba(225,161,64,0.6)] hover:-translate-y-0.5 active:translate-y-0 active:scale-98"
               >
-                <path
-                  d="M200 0C250 100 350 150 400 200C350 250 250 300 200 400C150 300 50 250 0 200C50 150 150 100 200 0Z"
-                  fill="currentColor"
-                />
-                <circle cx="200" cy="200" r="120" stroke="currentColor" strokeWidth="1.5" />
-                <circle cx="200" cy="200" r="80" stroke="currentColor" strokeWidth="1.2" />
-              </svg>
-            </div>
-
-            <div className="relative z-10 fade-up">
-              {/* Top Badge */}
-              <div className="inline-block rounded-sm bg-burnt px-3.5 py-1.5 text-[0.68rem] font-bold tracking-[0.2em] text-ivory uppercase shadow-sm">
-                LATEST COLLECTION
-              </div>
-
-              {/* Main Headline */}
-              <h1 className="mt-4 font-display text-3xl font-bold uppercase tracking-wider text-ivory leading-[1.08] sm:text-4xl lg:text-4xl xl:text-5xl">
-                HANDCRAFTED <br />
-                <span className="text-gold">ISLAMIC WALL ART</span>
-              </h1>
-
-              {/* Description Paragraph */}
-              <p className="mt-3.5 max-w-md text-xs leading-relaxed text-ivory/80 sm:text-sm">
-                For spaces that seek quiet beauty, faith, and personal meaning. We take sacred
-                Arabic verses and personalized names and craft them into minimalist, luxury wall
-                art. From gold-leaf detailing to solid wood frames.
-              </p>
-
-              {/* CTA Action Button */}
-              <div className="mt-6">
-                <Link
-                  to="/shop"
-                  className="inline-flex items-center justify-center rounded-full bg-burnt px-8 py-3.5 text-xs font-semibold uppercase tracking-[0.2em] text-ivory shadow-md transition-all duration-300 hover:bg-gold hover:text-brown active:scale-95"
-                >
-                  SHOP NOW
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Image Showcase Panel with Slanted Diagonal Separator */}
-          <div className="relative min-h-[260px] h-full lg:col-span-6 lg:min-h-full">
-            {/* Slanted gold accent divider overlay on desktop */}
-            <div className="pointer-events-none absolute -left-6 inset-y-0 hidden w-12 z-20 lg:block">
-              <svg
-                className="h-full w-full text-brown"
-                preserveAspectRatio="none"
-                viewBox="0 0 100 100"
-              >
-                <polygon points="0,0 100,0 30,100 0,100" fill="currentColor" />
-                <line x1="100" y1="0" x2="30" y2="100" stroke="#C5A059" strokeWidth="3" />
-              </svg>
-            </div>
-
-            {/* Featured Room Interior Lifestyle Image */}
-            <div className="relative h-full w-full overflow-hidden">
-              <img
-                src={heroImage}
-                alt="Handcrafted Islamic Calligraphy Wall Art Interior"
-                className="h-full w-full object-cover object-center transition-transform duration-700 hover:scale-105"
-              />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-brown/60 via-transparent to-transparent lg:hidden" />
+                SHOP NOW
+              </Link>
             </div>
           </div>
         </div>

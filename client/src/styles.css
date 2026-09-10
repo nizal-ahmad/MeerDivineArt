@@ -1,6 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Reem+Kufi:wght@700&display=swap');
 @import "tailwindcss" source(none);
-@source "../src";
 @import "tw-animate-css";
+@source "../src";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -44,7 +45,7 @@
   --color-ivory: var(--ivory);
   --color-beige: var(--beige);
   --color-charcoal: var(--charcoal);
-  --font-display: "Cormorant Garamond", "Playfair Display", serif;
+  --font-display: "Montserrat", "Manrope", sans-serif;
   --font-sans: "Manrope", "Inter", system-ui, sans-serif;
   --shadow-soft: 0 18px 40px -28px oklch(0.318 0.085 49.4 / 0.45);
   --shadow-lift: 0 26px 60px -30px oklch(0.318 0.085 49.4 / 0.55);
@@ -57,26 +58,26 @@
   --brown: oklch(0.318 0.085 49.4);
   --sand: oklch(0.87 0.071 77.1);
   --burnt: oklch(0.473 0.122 46.7);
-  --ivory: oklch(0.977 0.007 80.7);
-  --beige: oklch(0.935 0.028 79.5);
+  --ivory: #ffffff;
+  --beige: #ffffff;
   --charcoal: oklch(0.269 0.013 62.1);
 
-  --background: oklch(0.977 0.007 80.7);
+  --background: #ffffff;
   --foreground: oklch(0.318 0.085 49.4);
-  --card: oklch(1 0 0);
+  --card: #ffffff;
   --card-foreground: oklch(0.318 0.085 49.4);
-  --popover: oklch(1 0 0);
+  --popover: #ffffff;
   --popover-foreground: oklch(0.318 0.085 49.4);
   --primary: oklch(0.318 0.085 49.4);
-  --primary-foreground: oklch(0.977 0.007 80.7);
-  --secondary: oklch(0.935 0.028 79.5);
+  --primary-foreground: #ffffff;
+  --secondary: #ffffff;
   --secondary-foreground: oklch(0.318 0.085 49.4);
-  --muted: oklch(0.935 0.028 79.5);
+  --muted: #fbfbfb;
   --muted-foreground: oklch(0.473 0.03 60);
   --accent: oklch(0.754 0.134 74.1);
   --accent-foreground: oklch(0.318 0.085 49.4);
   --destructive: oklch(0.473 0.122 46.7);
-  --destructive-foreground: oklch(0.977 0.007 80.7);
+  --destructive-foreground: #ffffff;
   --border: oklch(0.87 0.045 78 / 0.55);
   --input: oklch(0.87 0.045 78 / 0.7);
   --ring: oklch(0.754 0.134 74.1);
@@ -104,8 +105,8 @@
   h3,
   h4 {
     font-family: var(--font-display);
-    font-weight: 500;
-    letter-spacing: -0.01em;
+    font-weight: 600;
+    letter-spacing: -0.02em;
   }
 }
 

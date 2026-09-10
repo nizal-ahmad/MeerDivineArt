@@ -10,6 +10,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
+import logoImgUrl from "../assets/Logo@2x.png?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -88,8 +89,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Handcrafted Arabic calligraphy, Islamic wall art and personalised frames, made in Pakistan.",
       },
       { name: "author", content: "Meer Divine Art" },
-      { property: "og:type", content: "website" },
+      { property: "og:image", content: logoImgUrl },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: logoImgUrl },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -101,9 +103,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Manrope:wght@300;400;500;600;700&display=swap",
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: logoImgUrl, type: "image/png" },
+      { rel: "shortcut icon", href: logoImgUrl, type: "image/png" },
     ],
   }),
   shellComponent: RootShell,

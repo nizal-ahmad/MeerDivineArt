@@ -181,7 +181,7 @@ function AdminDashboardOverviewPage() {
                   <Tooltip
                     formatter={(val: any) => [formatPrice(val), "Revenue"]}
                     contentStyle={{
-                      backgroundColor: "#FAF7F2",
+                      backgroundColor: "#ffffff",
                       borderColor: "#E1A140",
                       borderRadius: "0px",
                     }}

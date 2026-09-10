@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Heart, Menu, Search, ShoppingBag, User, X } from "lucide-react";
 import { navigation } from "@/data/catalog";
 import { useShop } from "@/store/shop";
+import logoImg from "../../assets/Logo@2x.png";
 
 export function AnnouncementBar() {
   return (
@@ -44,13 +45,12 @@ export function Header() {
       <AnnouncementBar />
       <div className="border-b border-gold/25 bg-ivory/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
-          <Link to="/" className="shrink-0">
-            <span className="block font-display text-xl leading-none tracking-[0.18em] text-brown sm:text-2xl">
-              MEER
-            </span>
-            <span className="block text-[0.55rem] uppercase tracking-[0.42em] text-burnt">
-              Divine Art
-            </span>
+          <Link to="/" className="shrink-0 flex items-center">
+            <img
+              src={logoImg}
+              alt="Meer Divine Art"
+              className="h-10 w-auto object-contain sm:h-12"
+            />
           </Link>
 
           <nav className="hidden items-center gap-7 lg:flex">
@@ -132,9 +132,13 @@ export function Header() {
           }`}
         >
           <div className="flex items-center justify-between border-b border-gold/25 px-5 py-4">
-            <span className="font-display text-lg tracking-[0.18em] text-brown">
-              MEER DIVINE ART
-            </span>
+            <Link to="/" onClick={() => setMenuOpen(false)} className="flex items-center">
+              <img
+                src={logoImg}
+                alt="Meer Divine Art"
+                className="h-9 w-auto object-contain"
+              />
+            </Link>
             <button
               type="button"
               aria-label="Close menu"

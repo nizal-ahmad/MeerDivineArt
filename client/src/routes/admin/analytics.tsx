@@ -91,7 +91,7 @@ function AdminAnalyticsPage() {
                 <Tooltip
                   formatter={(val: any) => [formatPrice(val), "Revenue"]}
                   contentStyle={{
-                    backgroundColor: "#FAF7F2",
+                    backgroundColor: "#ffffff",
                     borderColor: "#E1A140",
                     borderRadius: "0px",
                   }}
@@ -134,7 +134,7 @@ function AdminAnalyticsPage() {
                   <YAxis stroke="#532200" fontSize={11} />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "#FAF7F2",
+                      backgroundColor: "#ffffff",
                       borderColor: "#E1A140",
                     }}
                   />
@@ -166,7 +166,7 @@ function AdminAnalyticsPage() {
                   <CartesianGrid strokeDasharray="3 3" stroke="#EFCFA0" opacity={0.4} />
                   <XAxis type="number" stroke="#532200" fontSize={11} />
                   <YAxis dataKey="name" type="category" stroke="#532200" fontSize={10} width={110} />
-                  <Tooltip contentStyle={{ backgroundColor: "#FAF7F2", borderColor: "#E1A140" }} />
+                  <Tooltip contentStyle={{ backgroundColor: "#ffffff", borderColor: "#E1A140" }} />
                   <Bar dataKey="productsCount" name="Products" fill="#914110" radius={[0, 2, 2, 0]} />
                 </BarChart>
               </ResponsiveContainer>

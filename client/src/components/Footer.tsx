@@ -1,18 +1,20 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Mail, MapPin, Phone } from "lucide-react";
 import { categories } from "@/data/catalog";
+import logoImg from "../../assets/Logo@2x.png";
 
 export function Footer() {
   return (
     <footer className="mt-24 border-t border-gold/25 bg-brown text-ivory/85">
       <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:px-8 md:grid-cols-4 md:py-16">
         <div className="md:col-span-1">
-          <span className="block font-display text-2xl tracking-[0.18em] text-ivory">
-            MEER
-          </span>
-          <span className="block text-[0.55rem] uppercase tracking-[0.42em] text-gold">
-            Divine Art
-          </span>
+          <Link to="/" className="inline-block">
+            <img
+              src={logoImg}
+              alt="Meer Divine Art"
+              className="h-12 w-auto object-contain brightness-0 invert opacity-95"
+            />
+          </Link>
           <p className="mt-5 max-w-xs text-sm leading-relaxed text-ivory/65">
             Handcrafted calligraphy, Islamic art and personalised frames, made in
             Pakistan with patience and care.

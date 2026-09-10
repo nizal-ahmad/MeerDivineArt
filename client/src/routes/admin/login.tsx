@@ -3,6 +3,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Lock, Mail, ShieldAlert } from "lucide-react";
 import { api } from "@/services/api";
 import { toast, Toaster } from "sonner";
+import logoImg from "../../../assets/Logo@2x.png";
 
 export const Route = createFileRoute("/admin/login")({
   component: AdminLoginPage,
@@ -42,16 +43,18 @@ function AdminLoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-beige/40 px-4 py-12 font-sans">
+    <div className="flex min-h-screen items-center justify-center bg-white px-4 py-12 font-sans">
       <Toaster position="top-right" richColors />
       <div className="w-full max-w-md border border-gold/30 bg-ivory p-8 shadow-[var(--shadow-lift)] sm:p-10">
-        <div className="text-center">
-          <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-sand/60 text-brown">
-            <Lock className="h-5 w-5 text-burnt" strokeWidth={1.5} />
-          </span>
-          <h1 className="mt-4 font-display text-3xl text-brown">Admin Portal</h1>
+        <div className="text-center flex flex-col items-center">
+          <img
+            src={logoImg}
+            alt="Meer Divine Art"
+            className="h-14 w-auto object-contain mb-3"
+          />
+          <h1 className="font-display text-2xl text-brown">Admin Portal</h1>
           <p className="mt-1 text-xs text-brown/60 uppercase tracking-[0.2em]">
-            Meer Divine Art Studio
+            Studio Control Center
           </p>
         </div>
 

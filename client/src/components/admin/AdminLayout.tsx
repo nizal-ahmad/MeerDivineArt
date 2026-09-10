@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { api, getAdminToken } from "@/services/api";
 import { Toaster } from "sonner";
+import logoImg from "../../../assets/Logo@2x.png";
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -75,19 +76,18 @@ export function AdminLayout({
   ];
 
   return (
-    <div className="flex min-h-screen bg-beige/30 text-brown font-sans">
+    <div className="flex min-h-screen bg-white text-brown font-sans">
       <Toaster position="top-right" richColors />
 
       {/* Sidebar Desktop */}
       <aside className="hidden w-64 shrink-0 flex-col border-r border-gold/25 bg-ivory shadow-[var(--shadow-soft)] lg:flex">
         <div className="flex h-20 items-center justify-between border-b border-gold/25 px-6">
-          <Link to="/admin" className="block">
-            <span className="block font-display text-xl leading-none tracking-[0.18em] text-brown">
-              MEER
-            </span>
-            <span className="block text-[0.55rem] uppercase tracking-[0.42em] text-burnt font-semibold">
-              Admin Studio
-            </span>
+          <Link to="/admin" className="flex items-center">
+            <img
+              src={logoImg}
+              alt="Meer Divine Art Admin"
+              className="h-9 w-auto object-contain"
+            />
           </Link>
           <span className="flex h-6 w-6 items-center justify-center rounded-full bg-sand/60 text-brown text-xs" title="Single Admin Verified">
             <ShieldCheck className="h-3.5 w-3.5 text-burnt" />
@@ -165,9 +165,13 @@ export function AdminLayout({
           }`}
         >
           <div className="flex items-center justify-between border-b border-gold/25 px-5 py-4">
-            <span className="font-display text-lg tracking-[0.18em] text-brown">
-              MEER ADMIN
-            </span>
+            <Link to="/admin" onClick={() => setSidebarOpen(false)} className="flex items-center">
+              <img
+                src={logoImg}
+                alt="Meer Divine Art Admin"
+                className="h-8 w-auto object-contain"
+              />
+            </Link>
             <button onClick={() => setSidebarOpen(false)} className="text-brown">
               <X className="h-5 w-5" />
             </button>
