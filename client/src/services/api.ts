@@ -1,7 +1,19 @@
 import { toast } from "sonner";
 
-const API_BASE_URL =
-  (import.meta.env["VITE_API_URL"] as string | undefined) || "meerdivineart-production.up.railway.app/api";
+function getApiBaseUrl(): string {
+  let envUrl =
+    (import.meta.env["VITE_API_URL"] as string | undefined) ||
+    (import.meta.env["VITE_API_BASE_URL"] as string | undefined) ||
+    "https://meerdivineart-production.up.railway.app/api";
+
+  envUrl = envUrl.trim();
+  if (!envUrl.startsWith("http://") && !envUrl.startsWith("https://")) {
+    envUrl = `https://${envUrl}`;
+  }
+  return envUrl.replace(/\/+$/, "");
+}
+
+const API_BASE_URL = getApiBaseUrl();
 
 export function getAdminToken(): string | null {
   if (typeof window === "undefined") return null;
@@ -36,7 +48,8 @@ async function request<T>(
   }
 
   try {
-    const res = await fetch(`${API_BASE_URL}${endpoint}`, {
+    const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+    const res = await fetch(`${API_BASE_URL}${cleanEndpoint}`, {
       ...options,
       headers,
     });

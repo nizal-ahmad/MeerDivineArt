@@ -1,9 +1,33 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import dns from "node:dns";
 import { Category } from "../models/Category.js";
 import { Product } from "../models/Product.js";
 
 dotenv.config();
+
+if (dns.setDefaultResultOrder) {
+  dns.setDefaultResultOrder("ipv4first");
+}
+
+const connectToMongo = async (rawUri) => {
+  try {
+    return await mongoose.connect(rawUri, { serverSelectionTimeoutMS: 10000 });
+  } catch (error) {
+    if (error.message.includes("querySrv") && rawUri.includes("mongodb+srv://")) {
+      console.log("SRV DNS resolution blocked on local network. Retrying with direct cluster host string...");
+      const match = rawUri.match(/mongodb\+srv:\/\/([^:]+):([^@]+)@([^/]+)(\/.*)?/);
+      if (match) {
+        const [, user, pass, , rest] = match;
+        const dbAndQuery = rest || "/meer_divine_art";
+        const cleanDb = dbAndQuery.split("?")[0] || "/meer_divine_art";
+        const directUri = `mongodb://${user}:${pass}@ac-yl4kzkg-shard-00-00.awl4fa6.mongodb.net:27017,ac-yl4kzkg-shard-00-01.awl4fa6.mongodb.net:27017,ac-yl4kzkg-shard-00-02.awl4fa6.mongodb.net:27017${cleanDb}?ssl=true&authSource=admin&retryWrites=true&w=majority`;
+        return await mongoose.connect(directUri, { serverSelectionTimeoutMS: 10000 });
+      }
+    }
+    throw error;
+  }
+};
 
 const categoriesSeedData = [
   {
@@ -283,7 +307,7 @@ const seedCatalog = async () => {
       process.exit(1);
     }
 
-    await mongoose.connect(mongoUri);
+    await connectToMongo(mongoUri);
     console.log("Connected to MongoDB for catalog seeding...");
 
     // Seed Categories
